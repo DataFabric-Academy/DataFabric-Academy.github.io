@@ -158,13 +158,13 @@ graph TD
 1. **ทบทวนเนื้อหา** - กลับมาอ่านรายละเอียดที่เรียนไปแล้ว
 2. **ค้นหาข้อมูล** - ใช้ Search เพื่อหาข้อมูลที่ต้องการ
 3. **อ่านบทความ** - ติดตาม [Tech Blog](/blog) สำหรับเนื้อหาใหม่
-4. **Clone Repository** - Clone [repository](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io) เพื่อเก็บไว้ในเครื่อง
+4. **Clone Repository** - ดูคำแนะนำการ clone ในแต่ละหลักสูตร (ระบบ Multi-Repos)
 
 ### สำหรับผู้ที่สนใจ
 
 1. **Browse Resources** - ดูทรัพยากรที่มีให้
 2. **อ่านบทความ** - ติดตามบทความล่าสุดใน [Tech Blog](/blog)
-3. **Clone Repository** - Clone [repository](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io) มาไว้ในเครื่อง
+3. **Clone Repository** - ดูคำแนะนำการ clone ในแต่ละหลักสูตร (ระบบ Multi-Repos)
 4. **ติดตามอัปเดต** - [Watch repository](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io) เพื่อรับการแจ้งเตือน
 
 ## 📰 Tech Blog
@@ -210,16 +210,16 @@ graph TD
 - **Main Portal**: [DataFabric-Academy/DataFabric-Academy.github.io](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io)
 - **GitHub Organization**: [DataFabric-Academy](https://github.com/DataFabric-Academy)
 
-:::info Clone Repository
+:::info Multi-Repos Architecture
 
-คุณสามารถ clone repository เพื่อเก็บเนื้อหาไว้ในเครื่อง:
+DataFabric Academy ใช้ระบบ **Multi-Repos** ซึ่งแต่ละหลักสูตรมี repository แยกกัน:
 
-```bash
-git clone https://github.com/DataFabric-Academy/DataFabric-Academy.github.io.git
-cd DataFabric-Academy.github.io/website
-npm install
-npm start
-```
+- **Main Portal** (Knowledge Hub) - [DataFabric-Academy/DataFabric-Academy.github.io](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io)
+- **SQL Server Course** - ดู repository และคำแนะนำการ clone ใน [หลักสูตร SQL Server](https://datafabric.academy/course-ms-sql/)
+- **Power BI Course** - ดู repository และคำแนะนำการ clone ใน [หลักสูตร Power BI](https://datafabric.academy/course-power-bi/)
+- **n8n Course** - ดู repository และคำแนะนำการ clone ใน [หลักสูตร n8n](https://datafabric.academy/course-n8n/)
+
+**หมายเหตุ**: การ clone repository และการเริ่มต้นใช้งานจะแจ้งในแต่ละหลักสูตร ไม่ใช่ใน Main Portal นี้
 
 :::
 
