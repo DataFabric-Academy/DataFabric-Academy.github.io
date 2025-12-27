@@ -27,6 +27,12 @@ const config: Config = {
   onBrokenLinks: 'warn', // เปลี่ยนเป็น 'throw' เมื่อมั่นใจว่าลิงก์ครบถ้วน
   onBrokenMarkdownLinks: 'warn',
 
+  markdown: {
+    mermaid: true,
+  },
+
+  themes: ['@docusaurus/theme-mermaid'],
+
   i18n: {
     defaultLocale: 'th',
     locales: ['th', 'en'],
@@ -161,6 +167,9 @@ const config: Config = {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
       additionalLanguages: ['csharp', 'powershell', 'sql', 'bash', 'json'], // เพิ่มภาษาที่ใช้บ่อยใน Microsoft Stack
+    },
+    mermaid: {
+      theme: {light: 'neutral', dark: 'dark'},
     },
   } satisfies Preset.ThemeConfig,
 };

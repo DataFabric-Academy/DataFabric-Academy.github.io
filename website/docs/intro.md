@@ -110,33 +110,37 @@ Microsoft Power Platform ecosystem:
 
 ### Academy-as-Code Architecture
 
-```
-┌─────────────────────────────────────────┐
-│         Obsidian (Local)                │
-│  - Zettelkasten Knowledge Management    │
-│  - Wiki Links & Graph View              │
-│  - Daily Notes & Templates              │
-└──────────────┬──────────────────────────┘
-               │
-               │ Git Push
-               ▼
-┌─────────────────────────────────────────┐
-│         GitHub (Remote)                 │
-│  - Version Control                       │
-│  - Collaboration                         │
-│  - CI/CD Pipeline (GitHub Actions)      │
-│  - Repository: DataFabric-Academy/      │
-│    DataFabric-Academy.github.io         │
-└──────────────┬──────────────────────────┘
-               │
-               │ GitHub Actions
-               ▼
-┌─────────────────────────────────────────┐
-│      Docusaurus (Website)               │
-│  - Static Site Generation                │
-│  - Search & Navigation                   │
-│  - Multi-language Support                │
-└─────────────────────────────────────────┘
+```mermaid
+graph TD
+    A[Obsidian<br/>Local Knowledge Management] -->|Git Push| B[GitHub<br/>Remote Repository]
+    B -->|GitHub Actions<br/>CI/CD Pipeline| C[Docusaurus<br/>Website Deployment]
+    
+    A1[Zettelkasten<br/>Knowledge Management] -.-> A
+    A2[Wiki Links<br/>& Graph View] -.-> A
+    A3[Daily Notes<br/>& Templates] -.-> A
+    
+    B1[Version Control] -.-> B
+    B2[Collaboration] -.-> B
+    B3[CI/CD Pipeline] -.-> B
+    B4[Repository:<br/>DataFabric-Academy/<br/>DataFabric-Academy.github.io] -.-> B
+    
+    C1[Static Site<br/>Generation] -.-> C
+    C2[Search &<br/>Navigation] -.-> C
+    C3[Multi-language<br/>Support] -.-> C
+    
+    style A fill:#0078d4,stroke:#005495,stroke-width:2px,color:#fff
+    style B fill:#238636,stroke:#1a6e28,stroke-width:2px,color:#fff
+    style C fill:#2e8555,stroke:#1e6b3f,stroke-width:2px,color:#fff
+    style A1 fill:#e3f2fd,stroke:#0078d4,stroke-width:1px
+    style A2 fill:#e3f2fd,stroke:#0078d4,stroke-width:1px
+    style A3 fill:#e3f2fd,stroke:#0078d4,stroke-width:1px
+    style B1 fill:#dafbe1,stroke:#238636,stroke-width:1px
+    style B2 fill:#dafbe1,stroke:#238636,stroke-width:1px
+    style B3 fill:#dafbe1,stroke:#238636,stroke-width:1px
+    style B4 fill:#dafbe1,stroke:#238636,stroke-width:1px
+    style C1 fill:#d1fae5,stroke:#2e8555,stroke-width:1px
+    style C2 fill:#d1fae5,stroke:#2e8555,stroke-width:1px
+    style C3 fill:#d1fae5,stroke:#2e8555,stroke-width:1px
 ```
 
 ### ข้อดีของ Knowledge Fabric
