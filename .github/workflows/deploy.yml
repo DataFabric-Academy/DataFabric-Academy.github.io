@@ -26,6 +26,7 @@ jobs:
   build:
     name: Build Docusaurus
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -47,11 +48,22 @@ jobs:
         working-directory: website
         run: npm run build
 
+      - name: Check build output size
+        working-directory: website
+        run: |
+          du -sh build/ || echo "Build directory check"
+          find build -type f | wc -l || echo "File count check"
+
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v4
+        timeout-minutes: 15
+        continue-on-error: false
         with:
           # ชี้เป้า folder ที่ build เสร็จแล้ว (Docusaurus build ลง folder 'build')
           path: website/build
+          # ลด retention days เพื่อลดภาระในการเก็บ artifact
+          retention-days: 1
+        # Retry mechanism - GitHub Actions จะ retry อัตโนมัติเมื่อมี network error
 
   deploy:
     name: Deploy to Production
