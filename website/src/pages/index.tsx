@@ -7,11 +7,6 @@ import Heading from '@theme/Heading';
 
 import styles from './index.module.css';
 
-// Import SVG Icons
-import IconAcademyCode from '@site/static/img/icon-academy-code.svg';
-import IconFabricCloud from '@site/static/img/icon-fabric-cloud.svg';
-import IconRealworldSkills from '@site/static/img/icon-realworld-skills.svg';
-
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
   return (
@@ -59,7 +54,7 @@ type FeatureItem = {
 const FeatureList: FeatureItem[] = [
   {
     title: 'Academy-as-Code',
-    Svg: IconAcademyCode,
+    Svg: require('@site/static/img/icon-academy-code.svg').default,
     description: (
       <>
         เรียนรู้ผ่านการลงมือทำจริงด้วย <strong>Git</strong> และ <strong>Obsidian</strong>. 
@@ -71,7 +66,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Master Microsoft Fabric',
-    Svg: IconFabricCloud,
+    Svg: require('@site/static/img/icon-fabric-cloud.svg').default,
     description: (
       <>
         เจาะลึกเทคโนโลยีหลักที่เราสอน: <strong>Microsoft Fabric</strong>, 
@@ -83,7 +78,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Real-world Skills',
-    Svg: IconRealworldSkills,
+    Svg: require('@site/static/img/icon-realworld-skills.svg').default,
     description: (
       <>
         เน้นทักษะที่นำไปใช้ทำงานได้จริง ไม่ใช่แค่ทฤษฎี. 

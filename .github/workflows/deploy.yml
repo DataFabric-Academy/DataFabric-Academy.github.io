@@ -33,7 +33,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: 'npm'
           # สำคัญ: บอกตำแหน่ง lock file ให้ถูกต้องเพื่อใช้ Cache
           cache-dependency-path: website/package-lock.json
