@@ -67,6 +67,7 @@ jobs:
           fetch-depth: 0
 
       - name: Checkout Source Repository (Obsidian Vault)
+        id: checkout-source
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.OBSIDIAN_SYNC_TOKEN || secrets.GITHUB_TOKEN }}
@@ -74,6 +75,20 @@ jobs:
           ref: ${{ env.SOURCE_BRANCH }}
           path: source-vault
           fetch-depth: 0
+        continue-on-error: true
+
+      - name: Check if Source Repository Exists
+        id: check-source-repo
+        run: |
+          if [ -d "source-vault/.git" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "✅ Source repository found: ${{ env.GITHUB_ORG }}/${{ env.SOURCE_REPO }}"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "⚠️ Source repository not found: ${{ env.GITHUB_ORG }}/${{ env.SOURCE_REPO }}"
+            echo "ℹ️ This workflow requires the Obsidian Vault repository to exist."
+            echo "ℹ️ Please create the repository or skip this workflow if not needed."
+          fi
 
       - name: Setup Rust (for obsidian-export)
         uses: actions-rs/toolchain@v1
@@ -99,6 +114,7 @@ jobs:
         continue-on-error: true
 
       - name: Export Obsidian Vault to Markdown
+        if: steps.check-source-repo.outputs.exists == 'true'
         run: |
           # สร้าง output directory
           mkdir -p exported-content
@@ -116,6 +132,7 @@ jobs:
           find exported-content -type f -name "*.md" | head -10 || echo "No markdown files found"
 
       - name: Process and Copy Content
+        if: steps.check-source-repo.outputs.exists == 'true'
         run: |
           # Copy exported content ไปยัง target repository
           # ปรับ path ตามโครงสร้าง Docusaurus
@@ -149,6 +166,7 @@ jobs:
           echo "- **Total files synced**: $(find target-repo/website/docs -type f | wc -l)" >> $GITHUB_STEP_SUMMARY
 
       - name: Commit and Push Changes
+        if: steps.check-source-repo.outputs.exists == 'true'
         working-directory: target-repo
         run: |
           git config user.name "github-actions[bot]"
@@ -163,6 +181,20 @@ jobs:
           else
             echo "ℹ️ No changes to commit"
           fi
+
+      - name: Skip Workflow - Repository Not Found
+        if: steps.check-source-repo.outputs.exists != 'true'
+        run: |
+          echo "## ⚠️ Workflow Skipped" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Source repository **${{ env.GITHUB_ORG }}/${{ env.SOURCE_REPO }}** not found." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps:" >> $GITHUB_STEP_SUMMARY
+          echo "1. Create the repository: \`${{ env.GITHUB_ORG }}/${{ env.SOURCE_REPO }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "2. Or update the workflow input to use an existing repository" >> $GITHUB_STEP_SUMMARY
+          echo "3. Or disable this workflow if not needed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Note**: This workflow is optional and only needed if you want to sync from Obsidian Vault automatically." >> $GITHUB_STEP_SUMMARY
 
       - name: Trigger Deployment
         if: success()
