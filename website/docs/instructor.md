@@ -6,7 +6,7 @@ sidebar_position: 2
 
 <div style={{textAlign: 'center', marginBottom: '2rem'}}>
 
-![อาจารย์ภัคพงศ์ กฤตวัฒน์](./assets/Phakkhaphong%201.png)
+![อาจารย์ภัคพงศ์ กฤตวัฒน์](Phakkhaphong%201.png)
 
 **อาจารย์ภัคพงศ์ กฤตวัฒน์**  
 *9Expert Training Instructor*
