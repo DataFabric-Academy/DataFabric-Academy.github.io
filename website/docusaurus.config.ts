@@ -124,6 +124,13 @@ const config: Config = {
           target: '_self',
           position: 'left',
         },
+        {
+          label: 'n8n Course',
+          // ใช้ href กับ target: '_self' เพื่อ navigate ไปที่ deployment แยกโดยไม่เปิด tab ใหม่
+          href: 'https://datafabric.academy/course-n8n/',
+          target: '_self',
+          position: 'left',
+        },
       ],
     },
     footer: {
