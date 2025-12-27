@@ -1,0 +1,39 @@
+# Main Portal - DataFabric Academy
+
+## Parent Rule Reference
+This repository follows the **Global Academy-as-Code Policy** defined in `🚀 Academy Root/.cursorrules`. All rules from the parent apply unless explicitly overridden below.
+
+## Repository Context
+- **Repository**: `DataFabric-Academy/DataFabric-Academy.github.io`
+- **Purpose**: Main portal hub connecting all course repositories
+- **URL**: https://datafabric.academy
+- **Base URL**: `/` (root)
+- **Deployment**: GitHub Pages via GitHub Actions
+
+## Portal-Specific Standards
+
+### Content Structure
+- **i18n Support**: Thai (default) and English locales
+- **Blog**: Enabled - Use for announcements and cross-course content
+- **Docs Route**: `/` (root path for main documentation)
+- **Cross-References**: Link to course repositories using relative paths:
+  - `/course-ms-sql/` for SQL Server course
+  - `/course-power-bi/` for Power BI course
+  - `/course-n8n/` for n8n course
+
+### Technical Focus
+- **Primary Role**: Navigation hub and academy overview
+- **Content Type**: Meta-documentation, course catalog, academy policies
+- **Integration**: Must maintain links to all course repositories
+
+### Docusaurus Configuration
+- **Config File**: `website/docusaurus.config.ts`
+- **Sidebar**: `website/sidebars.ts`
+- **i18n Structure**: See `website/i18n-STRUCTURE.md` for details
+
+## AI Context Guidelines
+- When referencing courses, always use the correct baseUrl paths
+- Maintain consistency with course repository naming conventions
+- Check cross-references to ensure all course links are valid
+- Portal content should be language-agnostic (support both th/en)
+
