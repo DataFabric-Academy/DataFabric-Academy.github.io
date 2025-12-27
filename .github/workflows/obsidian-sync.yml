@@ -123,20 +123,30 @@ jobs:
           
           # Copy markdown files
           if [ -d "exported-content" ]; then
-            cp -r exported-content/* target-repo/website/docs/ || echo "Copy completed"
+            # Copy markdown files (ไม่รวม assets)
+            find exported-content -type f -name "*.md" -exec cp --parents {} target-repo/website/docs/ \; || echo "Markdown files copy completed"
+            
+            # Copy assets ที่ถูก export โดย obsidian-export
+            if [ -d "exported-content/assets" ]; then
+              mkdir -p target-repo/website/docs/assets
+              cp -r exported-content/assets/* target-repo/website/docs/assets/ || echo "Exported assets copy completed"
+            fi
           fi
           
-          # Copy assets (images, etc.)
+          # Copy assets จาก source vault (backup - ถ้า obsidian-export ไม่ได้ copy)
           if [ -d "source-vault/assets" ]; then
             mkdir -p target-repo/website/docs/assets
-            cp -r source-vault/assets/* target-repo/website/docs/assets/ || echo "Assets copy completed"
+            # Copy เฉพาะไฟล์ที่ยังไม่มี (ไม่ overwrite)
+            cp -rn source-vault/assets/* target-repo/website/docs/assets/ 2>/dev/null || echo "Source assets copy completed"
           fi
           
           # แสดง summary
           echo "## Content Sync Summary" >> $GITHUB_STEP_SUMMARY
           echo "- **Source**: ${{ env.GITHUB_ORG }}/${{ env.SOURCE_REPO }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Target**: ${{ env.GITHUB_ORG }}/${{ env.TARGET_REPO }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Files synced**: $(find target-repo/website/docs -type f | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Markdown files**: $(find target-repo/website/docs -type f -name "*.md" | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Image files**: $(find target-repo/website/docs/assets -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.svg" \) 2>/dev/null | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Total files synced**: $(find target-repo/website/docs -type f | wc -l)" >> $GITHUB_STEP_SUMMARY
 
       - name: Commit and Push Changes
         working-directory: target-repo
