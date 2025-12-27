@@ -21,7 +21,7 @@ const config: Config = {
   // GitHub Pages Deployment Config
   organizationName: 'DataFabric-Academy', // GitHub Org ของคุณ
   projectName: 'DataFabric-Academy.github.io', // ชื่อ Repo
-  deploymentBranch: 'gh-pages',
+  // หมายเหตุ: deploymentBranch ไม่จำเป็นเมื่อใช้ GitHub Actions สำหรับ deploy
   trailingSlash: false,
 
   onBrokenLinks: 'warn', // เปลี่ยนเป็น 'throw' เมื่อมั่นใจว่าลิงก์ครบถ้วน
