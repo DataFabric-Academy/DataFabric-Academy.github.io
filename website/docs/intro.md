@@ -2,13 +2,13 @@
 sidebar_position: 1
 ---
 
-# รู้จัก DataFabric Academy
+# รู้จัก Data Fabric Academy
 
-ยินดีต้อนรับสู่ **DataFabric Academy** - **ศูนย์รวมความรู้และทรัพยากรเสริม** สำหรับผู้ที่เข้าร่วมการฝึกอบรมและผู้ที่สนใจพัฒนาทักษะด้าน Data Engineering, Business Analytics และ Cloud Technologies
+ยินดีต้อนรับสู่ **Data Fabric Academy** - **ศูนย์รวมความรู้และทรัพยากรเสริม** สำหรับผู้ที่เข้าร่วมการฝึกอบรมและผู้ที่สนใจพัฒนาทักษะด้าน Data Engineering, Business Analytics และ Cloud Technologies
 
 ## 🎯 เกี่ยวกับเรา
 
-DataFabric Academy เป็น **Knowledge Hub** ที่ออกแบบมาเพื่อเป็นแหล่งอ้างอิงและเสริมความรู้ระหว่างและหลังการฝึกอบรม โดยใช้แนวคิด **Knowledge Fabric** ที่ผสมผสานระหว่าง:
+Data Fabric Academy เป็น **Knowledge Hub** ที่ออกแบบมาเพื่อเป็นแหล่งอ้างอิงและเสริมความรู้ระหว่างและหลังการฝึกอบรม โดยใช้แนวคิด **Knowledge Fabric** ที่ผสมผสานระหว่าง:
 
 - **Obsidian** - สำหรับจัดการความรู้แบบ Zettelkasten
 - **Git & GitHub** - สำหรับ version control และ collaboration
@@ -212,7 +212,7 @@ graph TD
 
 :::info Multi-Repos Architecture
 
-DataFabric Academy ใช้ระบบ **Multi-Repos** ซึ่งแต่ละหลักสูตรมี repository แยกกัน:
+Data Fabric Academy ใช้ระบบ **Multi-Repos** ซึ่งแต่ละหลักสูตรมี repository แยกกัน:
 
 - **Main Portal** (Knowledge Hub) - [DataFabric-Academy/DataFabric-Academy.github.io](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io)
 - **SQL Server Course** - ดู repository และคำแนะนำการ clone ใน [หลักสูตร SQL Server](https://datafabric.academy/course-ms-sql/)
