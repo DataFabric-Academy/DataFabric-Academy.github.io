@@ -2,33 +2,35 @@
 sidebar_position: 1
 ---
 
-# รู้จัก Data Fabric Academy
+# รู้จัก DataFabric Academy
 
-ยินดีต้อนรับสู่ **Data Fabric Academy** - แพลตฟอร์มการเรียนรู้แบบ **Academy-as-Code** สำหรับ Data Professionals ที่ต้องการพัฒนาทักษะด้าน Data Engineering, Business Analytics และ Cloud Technologies
+ยินดีต้อนรับสู่ **DataFabric Academy** - **ศูนย์รวมความรู้และทรัพยากรเสริม** สำหรับผู้ที่เข้าร่วมการฝึกอบรมและผู้ที่สนใจพัฒนาทักษะด้าน Data Engineering, Business Analytics และ Cloud Technologies
 
 ## 🎯 เกี่ยวกับเรา
 
-Data Fabric Academy เป็นระบบการเรียนรู้ที่ออกแบบมาเพื่อประกอบการบรรยายของ **อาจารย์ภัคพงศ์ กฤตวัฒน์** โดยใช้แนวคิด **Knowledge Fabric** ที่ผสมผสานระหว่าง:
+DataFabric Academy เป็น **Knowledge Hub** ที่ออกแบบมาเพื่อเป็นแหล่งอ้างอิงและเสริมความรู้ระหว่างและหลังการฝึกอบรม โดยใช้แนวคิด **Knowledge Fabric** ที่ผสมผสานระหว่าง:
 
 - **Obsidian** - สำหรับจัดการความรู้แบบ Zettelkasten
 - **Git & GitHub** - สำหรับ version control และ collaboration
+  - Repository: [DataFabric-Academy/DataFabric-Academy.github.io](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io)
+  - Organization: [DataFabric-Academy](https://github.com/DataFabric-Academy)
 - **Docusaurus** - สำหรับเผยแพร่เนื้อหาผ่านเว็บไซต์
 
-:::info ทำไมต้องใช้ Academy-as-Code?
+:::info ทำไมต้องมี Knowledge Hub?
 
-เมื่อการบรรยายผ่านสไลด์เพียงอย่างเดียวไม่เพียงพอ เนื่องจากรายละเอียดเยอะและต้องการให้ผู้เรียนสามารถ:
-- **Clone** และ **Fork** เนื้อหาได้ทันที
-- **แก้ไข** และ **ปรับแต่ง** ตามความต้องการ
-- **เรียนรู้ผ่านการลงมือทำ** ไม่ใช่แค่ทฤษฎี
-- **เข้าถึงได้ทุกที่ทุกเวลา** ผ่านเว็บไซต์
+ระหว่างและหลังการฝึกอบรม ผู้เรียนมักต้องการ:
+- **ทบทวนเนื้อหา** - กลับมาดูรายละเอียดที่อาจลืม
+- **ค้นหาข้อมูลเพิ่มเติม** - หา resources และเอกสารอ้างอิง
+- **ติดตามข่าวสาร** - อ่านบทความและอัปเดตล่าสุด
+- **เข้าถึงได้ทุกที่ทุกเวลา** - ไม่ต้องพึ่งพาเอกสารที่อาจหาย
 
 :::
 
-## 📚 เนื้อหาที่เราสอน
+## 📚 เนื้อหาที่เรารวบรวม
 
 ### Data Platform
 
-เทคโนโลยีหลักสำหรับการจัดการและวิเคราะห์ข้อมูล:
+ทรัพยากรความรู้เกี่ยวกับเทคโนโลยีหลักสำหรับการจัดการและวิเคราะห์ข้อมูล:
 
 #### Microsoft SQL Server
 - Database Administration และ Performance Tuning
@@ -63,7 +65,7 @@ Microsoft Fabric เป็น **Analytics Platform** แบบใหม่ที
 
 ### Workflow Orchestration
 
-เครื่องมือสำหรับการสร้าง Automated Workflows:
+ทรัพยากรเกี่ยวกับเครื่องมือสำหรับการสร้าง Automated Workflows:
 
 #### Microsoft Power Automate
 - Cloud Flows และ Desktop Flows
@@ -122,7 +124,9 @@ Microsoft Power Platform ecosystem:
 │         GitHub (Remote)                 │
 │  - Version Control                       │
 │  - Collaboration                         │
-│  - CI/CD Pipeline                       │
+│  - CI/CD Pipeline (GitHub Actions)      │
+│  - Repository: DataFabric-Academy/      │
+│    DataFabric-Academy.github.io         │
 └──────────────┬──────────────────────────┘
                │
                │ GitHub Actions
@@ -143,47 +147,80 @@ Microsoft Power Platform ecosystem:
 ✅ **Maintainability** - แก้ไขและอัปเดตได้ง่าย  
 ✅ **Scalability** - เพิ่มเนื้อหาใหม่ได้ไม่จำกัด  
 
-## 🚀 เริ่มต้นใช้งาน
+## 📖 วิธีใช้งาน Knowledge Hub
 
-### สำหรับผู้เรียน
+### สำหรับผู้เข้าร่วมการฝึกอบรม
 
-1. **Browse Courses** - ดูรายการคอร์สที่มีให้เลือก
-2. **Clone Repository** - Clone เนื้อหามาไว้ในเครื่อง
-3. **Follow Along** - เรียนรู้ตามบทเรียนทีละขั้นตอน
-4. **Practice** - ลงมือทำตาม exercises และ labs
+1. **ทบทวนเนื้อหา** - กลับมาอ่านรายละเอียดที่เรียนไปแล้ว
+2. **ค้นหาข้อมูล** - ใช้ Search เพื่อหาข้อมูลที่ต้องการ
+3. **อ่านบทความ** - ติดตาม [Tech Blog](/blog) สำหรับเนื้อหาใหม่
+4. **Clone Repository** - Clone [repository](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io) เพื่อเก็บไว้ในเครื่อง
 
-### สำหรับผู้สอน
+### สำหรับผู้ที่สนใจ
 
-1. **Create Content** - สร้างเนื้อหาใน Obsidian
-2. **Commit & Push** - Push ไปยัง GitHub
-3. **Auto Deploy** - GitHub Actions จะ deploy อัตโนมัติ
-4. **Share** - แชร์ลิงก์ให้ผู้เรียน
+1. **Browse Resources** - ดูทรัพยากรที่มีให้
+2. **อ่านบทความ** - ติดตามบทความล่าสุดใน [Tech Blog](/blog)
+3. **Clone Repository** - Clone [repository](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io) มาไว้ในเครื่อง
+4. **ติดตามอัปเดต** - [Watch repository](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io) เพื่อรับการแจ้งเตือน
 
-## 📖 ทรัพยากรเพิ่มเติม
+## 📰 Tech Blog
+
+[Tech Blog](/blog) ของเรานำเสนอ:
+- **บทความล่าสุด** - เรื่องราวใหม่ ๆ เกี่ยวกับ Data Engineering และ Cloud Technologies
+- **Best Practices** - แนวทางปฏิบัติที่ดีจากประสบการณ์จริง
+- **Case Studies** - ตัวอย่างการใช้งานจริง
+- **Tips & Tricks** - เคล็ดลับและเทคนิคที่ช่วยให้ทำงานได้ดีขึ้น
+
+:::tip ติดตามข่าวสารล่าสุด
+
+เยี่ยมชม [Tech Blog](/blog) เพื่ออ่านบทความล่าสุดเกี่ยวกับ Data Engineering, Microsoft Fabric, และเทคโนโลยีที่เกี่ยวข้อง
+
+:::
+
+## 📚 ทรัพยากรเพิ่มเติม
+
+### เอกสารอย่างเป็นทางการ
 
 - **[Microsoft Fabric Documentation](https://learn.microsoft.com/fabric/)** - เอกสารอย่างเป็นทางการจาก Microsoft
 - **[Power BI Documentation](https://learn.microsoft.com/power-bi/)** - คู่มือ Power BI
 - **[n8n Documentation](https://docs.n8n.io/)** - คู่มือ n8n
 - **[Obsidian Documentation](https://help.obsidian.md/)** - คู่มือ Obsidian
 
+### GitHub Resources
+
+- **[GitHub Repository](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io)** - Source code และเนื้อหาทั้งหมด
+- **[GitHub Organization](https://github.com/DataFabric-Academy)** - ดู repositories อื่น ๆ ใน organization
+- **[GitHub Issues](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io/issues)** - รายงานปัญหาและข้อเสนอแนะ
+- **[GitHub Discussions](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io/discussions)** - อภิปรายและถามคำถาม
+
 ## 🤝 การมีส่วนร่วม
 
 เรายินดีรับการมีส่วนร่วมจากทุกคน! หากคุณต้องการ:
 
-- **รายงานปัญหา** - สร้าง Issue ใน GitHub
-- **เสนอแนะเนื้อหา** - สร้าง Discussion
-- **ส่ง Pull Request** - แก้ไขหรือเพิ่มเนื้อหา
+- **รายงานปัญหา** - สร้าง [Issue](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io/issues) ใน GitHub
+- **เสนอแนะเนื้อหา** - สร้าง [Discussion](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io/discussions)
+- **ส่ง Pull Request** - แก้ไขหรือเพิ่มเนื้อหาผ่าน [Pull Request](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io/pulls)
 
-:::tip ต้องการเรียนรู้เพิ่มเติม?
+### GitHub Repository
 
-เยี่ยมชม [Tech Blog](/blog) เพื่ออ่านบทความล่าสุดเกี่ยวกับ Data Engineering, Microsoft Fabric, และเทคโนโลยีที่เกี่ยวข้อง
+- **Main Portal**: [DataFabric-Academy/DataFabric-Academy.github.io](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io)
+- **GitHub Organization**: [DataFabric-Academy](https://github.com/DataFabric-Academy)
+
+:::info Clone Repository
+
+คุณสามารถ clone repository เพื่อเก็บเนื้อหาไว้ในเครื่อง:
+
+```bash
+git clone https://github.com/DataFabric-Academy/DataFabric-Academy.github.io.git
+cd DataFabric-Academy.github.io/website
+npm install
+npm start
+```
 
 :::
 
 ---
 
-## 🎓 พร้อมเริ่มต้นเรียนรู้แล้วหรือยัง?
+## 🎓 เริ่มต้นใช้งาน
 
-เยี่ยมชม [Tech Blog](/blog) เพื่ออ่านบทความล่าสุดเกี่ยวกับ Data Engineering, Microsoft Fabric, และเทคโนโลยีที่เกี่ยวข้อง
-
-หรือเริ่มต้นด้วยการ [Explore Courses](/)
+เยี่ยมชม [Tech Blog](/blog) เพื่ออ่านบทความล่าสุด หรือใช้ Search เพื่อค้นหาข้อมูลที่คุณต้องการ

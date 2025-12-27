@@ -9,41 +9,41 @@ import styles from './index.module.css';
 
 // ===== TypeScript Interfaces =====
 
-interface Course {
+interface Resource {
   id: string;
   title: string;
   description: string;
   link: string;
-  tag: 'Recommended' | 'Architecture' | 'Coming Soon';
+  category: 'Documentation' | 'Blog' | 'Reference';
   icon: string;
 }
 
-// ===== Course Data =====
+// ===== Resource Data =====
 
-const COURSES: Course[] = [
+const RESOURCES: Resource[] = [
   {
-    id: 'azure-fabric',
-    title: 'Azure Fabric: Zero to Hero',
-    description: 'End-to-end analytics with Microsoft Fabric. Master data engineering, warehousing, and business intelligence in one unified platform.',
-    link: '/course-azure-fabric',
-    tag: 'Recommended',
-    icon: '☁️',
-  },
-  {
-    id: 'knowledge-fabric',
-    title: 'Knowledge Fabric System',
-    description: 'Building an Academy-as-Code with Obsidian & GitHub. Learn how to structure and deliver technical education as version-controlled content.',
+    id: 'knowledge-base',
+    title: 'Knowledge Base',
+    description: 'ศูนย์รวมความรู้และเอกสารอ้างอิงสำหรับทบทวนเนื้อหาระหว่างและหลังการฝึกอบรม',
     link: '/intro',
-    tag: 'Architecture',
+    category: 'Documentation',
     icon: '📚',
   },
   {
-    id: 'power-bi-advanced',
-    title: 'Power BI Advanced Data Modeling',
-    description: 'Mastering DAX and relationships. Deep dive into advanced data modeling techniques, performance optimization, and complex calculations.',
-    link: '#',
-    tag: 'Coming Soon',
-    icon: '📊',
+    id: 'tech-blog',
+    title: 'Tech Blog',
+    description: 'บทความล่าสุดเกี่ยวกับ Data Engineering, Microsoft Fabric, และเทคโนโลยีที่เกี่ยวข้อง',
+    link: '/blog',
+    category: 'Blog',
+    icon: '📝',
+  },
+  {
+    id: 'resources',
+    title: 'External Resources',
+    description: 'ลิงก์ไปยังเอกสารอย่างเป็นทางการและทรัพยากรเพิ่มเติมจาก Microsoft และชุมชน',
+    link: '/intro#-ทรัพยากรเพิ่มเติม',
+    category: 'Reference',
+    icon: '🔗',
   },
 ];
 
@@ -52,9 +52,9 @@ const COURSES: Course[] = [
 function HomepageHeader(): ReactNode {
   const {siteConfig} = useDocusaurusContext();
 
-  const scrollToCourses = (): void => {
-    const coursesSection = document.getElementById('courses');
-    coursesSection?.scrollIntoView({behavior: 'smooth', block: 'start'});
+  const scrollToResources = (): void => {
+    const resourcesSection = document.getElementById('resources');
+    resourcesSection?.scrollIntoView({behavior: 'smooth', block: 'start'});
   };
 
   return (
@@ -68,15 +68,15 @@ function HomepageHeader(): ReactNode {
             {siteConfig.tagline}
           </p>
           <p className={styles.heroDescription}>
-            พัฒนาทักษะ Data Engineering และ Business Analytics ผ่านการเรียนรู้แบบ Academy-as-Code 
-            ด้วย Microsoft Fabric, Power BI และเทคโนโลยี Cloud ที่ทันสมัย
+            ศูนย์รวมความรู้และทรัพยากรเสริมสำหรับผู้เข้าร่วมการฝึกอบรม 
+            และผู้ที่สนใจพัฒนาทักษะด้าน Data Engineering, Business Analytics และ Cloud Technologies
           </p>
           <div className={styles.heroButtons}>
             <Link
               className="button button--primary button--lg"
-              onClick={scrollToCourses}
-              to="#courses">
-              Explore Courses
+              onClick={scrollToResources}
+              to="#resources">
+              Explore Resources
             </Link>
             <Link
               className="button button--secondary button--lg"
@@ -93,72 +93,63 @@ function HomepageHeader(): ReactNode {
   );
 }
 
-// ===== Course Card Component =====
+// ===== Resource Card Component =====
 
-interface CourseCardProps {
-  course: Course;
+interface ResourceCardProps {
+  resource: Resource;
 }
 
-function CourseCard({course}: CourseCardProps): ReactNode {
-  const isComingSoon = course.tag === 'Coming Soon';
-  const cardClasses = clsx(styles.courseCard, {
-    [styles.courseCardComingSoon]: isComingSoon,
-  });
+function ResourceCard({resource}: ResourceCardProps): ReactNode {
+  const cardClasses = clsx(styles.resourceCard);
 
   return (
-    <div className={clsx('col col--4', styles.courseCardWrapper)}>
+    <div className={clsx('col col--4', styles.resourceCardWrapper)}>
       <div className={cardClasses}>
-        <div className={styles.courseCardHeader}>
-          <div className={styles.courseIcon}>{course.icon}</div>
-          {course.tag && (
-            <span className={clsx(styles.courseTag, styles[`courseTag${course.tag.replace(' ', '')}`])}>
-              {course.tag}
+        <div className={styles.resourceCardHeader}>
+          <div className={styles.resourceIcon}>{resource.icon}</div>
+          {resource.category && (
+            <span className={clsx(styles.resourceCategory, styles[`resourceCategory${resource.category}`])}>
+              {resource.category}
             </span>
           )}
         </div>
-        <div className={styles.courseCardBody}>
-          <Heading as="h3" className={styles.courseTitle}>
-            {course.title}
+        <div className={styles.resourceCardBody}>
+          <Heading as="h3" className={styles.resourceTitle}>
+            {resource.title}
           </Heading>
-          <p className={styles.courseDescription}>
-            {course.description}
+          <p className={styles.resourceDescription}>
+            {resource.description}
           </p>
         </div>
-        <div className={styles.courseCardFooter}>
-          {isComingSoon ? (
-            <span className={clsx('button button--disabled', styles.courseButton)}>
-              Coming Soon
-            </span>
-          ) : (
-            <Link
-              className={clsx('button button--primary', styles.courseButton)}
-              to={course.link}>
-              Start Learning →
-            </Link>
-          )}
+        <div className={styles.resourceCardFooter}>
+          <Link
+            className={clsx('button button--primary', styles.resourceButton)}
+            to={resource.link}>
+            Explore →
+          </Link>
         </div>
       </div>
     </div>
   );
 }
 
-// ===== Course Catalog Section =====
+// ===== Resources Section =====
 
-function CourseCatalog(): ReactNode {
+function ResourcesSection(): ReactNode {
   return (
-    <section id="courses" className={styles.coursesSection}>
+    <section id="resources" className={styles.resourcesSection}>
       <div className="container">
-        <div className={styles.coursesHeader}>
-          <Heading as="h2" className={styles.coursesTitle}>
-            Explore Our Courses
+        <div className={styles.resourcesHeader}>
+          <Heading as="h2" className={styles.resourcesTitle}>
+            Knowledge Resources
           </Heading>
-          <p className={styles.coursesSubtitle}>
-            Comprehensive learning paths designed for data professionals at every level
+          <p className={styles.resourcesSubtitle}>
+            ทรัพยากรความรู้ที่พร้อมให้คุณเข้าถึงได้ทุกที่ทุกเวลา
           </p>
         </div>
         <div className="row">
-          {COURSES.map((course) => (
-            <CourseCard key={course.id} course={course} />
+          {RESOURCES.map((resource) => (
+            <ResourceCard key={resource.id} resource={resource} />
           ))}
         </div>
       </div>
@@ -172,11 +163,11 @@ export default function Home(): ReactNode {
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      title={`${siteConfig.title} - Academy-as-Code for Data Professionals`}
-      description="Learn Data Engineering and Business Analytics through Academy-as-Code with Microsoft Fabric, Power BI, and modern Cloud technologies">
+      title={`${siteConfig.title} - Knowledge Hub for Data Professionals`}
+      description="ศูนย์รวมความรู้และทรัพยากรเสริมสำหรับผู้เข้าร่วมการฝึกอบรมและผู้ที่สนใจพัฒนาทักษะด้าน Data Engineering, Business Analytics และ Cloud Technologies">
       <HomepageHeader />
       <main>
-        <CourseCatalog />
+        <ResourcesSection />
       </main>
     </Layout>
   );

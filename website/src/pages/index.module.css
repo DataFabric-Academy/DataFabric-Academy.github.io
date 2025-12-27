@@ -138,38 +138,38 @@
   transform: translateY(-2px);
 }
 
-/* ===== Courses Section ===== */
-.coursesSection {
+/* ===== Resources Section ===== */
+.resourcesSection {
   padding: 6rem 0;
   background: var(--ifm-background-color);
   position: relative;
   scroll-margin-top: 2rem;
 }
 
-.coursesHeader {
+.resourcesHeader {
   text-align: center;
   margin-bottom: 4rem;
 }
 
-.coursesTitle {
+.resourcesTitle {
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
   color: var(--ifm-heading-color);
 }
 
-.coursesSubtitle {
+.resourcesSubtitle {
   font-size: 1.25rem;
   color: var(--ifm-color-content-secondary);
   max-width: 600px;
   margin: 0 auto;
 }
 
-.courseCardWrapper {
+.resourceCardWrapper {
   margin-bottom: 2rem;
 }
 
-.courseCard {
+.resourceCard {
   background: var(--ifm-card-background-color);
   border: 1px solid var(--ifm-color-emphasis-200);
   border-radius: 12px;
@@ -182,33 +182,24 @@
   overflow: hidden;
 }
 
-[data-theme='dark'] .courseCard {
+[data-theme='dark'] .resourceCard {
   background: rgba(255, 255, 255, 0.02);
   border-color: rgba(255, 255, 255, 0.1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.courseCard:hover {
+.resourceCard:hover {
   transform: translateY(-8px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
   border-color: var(--ifm-color-primary);
 }
 
-[data-theme='dark'] .courseCard:hover {
+[data-theme='dark'] .resourceCard:hover {
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
   background: rgba(255, 255, 255, 0.04);
 }
 
-.courseCardComingSoon {
-  opacity: 0.85;
-  cursor: not-allowed;
-}
-
-.courseCardComingSoon:hover {
-  transform: none;
-}
-
-.courseCardHeader {
+.resourceCardHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -216,13 +207,13 @@
   border-bottom: 1px solid var(--ifm-color-emphasis-200);
 }
 
-.courseIcon {
+.resourceIcon {
   font-size: 3rem;
   line-height: 1;
   margin-right: 1rem;
 }
 
-.courseTag {
+.resourceCategory {
   display: inline-block;
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
@@ -232,29 +223,29 @@
   letter-spacing: 0.5px;
 }
 
-.courseTagRecommended {
+.resourceCategoryDocumentation {
+  background: var(--ifm-color-primary);
+  color: white;
+}
+
+.resourceCategoryBlog {
   background: var(--ifm-color-success);
   color: white;
 }
 
-.courseTagArchitecture {
+.resourceCategoryReference {
   background: var(--ifm-color-info);
   color: white;
 }
 
-.courseTagComingSoon {
-  background: var(--ifm-color-emphasis-300);
-  color: var(--ifm-color-content);
-}
-
-.courseCardBody {
+.resourceCardBody {
   padding: 1.5rem 2rem;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
 }
 
-.courseTitle {
+.resourceTitle {
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -262,7 +253,7 @@
   line-height: 1.3;
 }
 
-.courseDescription {
+.resourceDescription {
   font-size: 1rem;
   line-height: 1.7;
   color: var(--ifm-color-content);
@@ -270,19 +261,19 @@
   flex-grow: 1;
 }
 
-.courseCardFooter {
+.resourceCardFooter {
   padding: 1.5rem 2rem 2rem;
   border-top: 1px solid var(--ifm-color-emphasis-200);
 }
 
-.courseButton {
+.resourceButton {
   width: 100%;
   justify-content: center;
   font-weight: 600;
   transition: all 0.3s ease;
 }
 
-.courseButton:hover {
+.resourceButton:hover {
   transform: translateY(-1px);
 }
 
@@ -304,17 +295,17 @@
     font-size: 1.1rem;
   }
 
-  .coursesSection {
+  .resourcesSection {
     padding: 4rem 0;
   }
 
-  .coursesTitle {
+  .resourcesTitle {
     font-size: 2rem;
   }
 
-  .courseCardHeader,
-  .courseCardBody,
-  .courseCardFooter {
+  .resourceCardHeader,
+  .resourceCardBody,
+  .resourceCardFooter {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
   }
@@ -347,27 +338,27 @@
     max-width: 300px;
   }
 
-  .coursesTitle {
+  .resourcesTitle {
     font-size: 1.75rem;
   }
 
-  .courseCardHeader {
+  .resourceCardHeader {
     padding: 1.5rem 1.5rem 1rem;
   }
 
-  .courseCardBody {
+  .resourceCardBody {
     padding: 1rem 1.5rem;
   }
 
-  .courseCardFooter {
+  .resourceCardFooter {
     padding: 1rem 1.5rem 1.5rem;
   }
 
-  .courseIcon {
+  .resourceIcon {
     font-size: 2.5rem;
   }
 
-  .courseTitle {
+  .resourceTitle {
     font-size: 1.25rem;
   }
 }
