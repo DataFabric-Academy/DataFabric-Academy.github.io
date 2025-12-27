@@ -31,8 +31,8 @@ function HomepageHeader() {
             </Link>
             <Link
               className="button button--secondary button--lg"
-              href="https://github.com/DataFabric-Academy">
-              GitHub Organization
+              to="/blog">
+              อ่าน Tech Blog
             </Link>
           </div>
         </div>

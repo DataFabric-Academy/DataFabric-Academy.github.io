@@ -47,7 +47,26 @@ const config: Config = {
           // ชี้ Route ไปที่ root เพื่อให้เข้าถึงง่าย (เช่น datafabric.academy/intro)
           routeBasePath: '/', 
         },
-        blog: false, // ปิด Blog ไปก่อนถ้ายังไม่ใช้ หรือเปิดไว้ถ้าต้องการ News Update
+        blog: {
+          showReadingTime: true,
+          // สำคัญ: กำหนด path ให้ชัดเจนเพื่อให้จัดการใน Obsidian ง่าย
+          path: 'blog', 
+          routeBasePath: 'blog',
+          
+          // แนะนำให้เปิด feed เพื่อรองรับ RSS Reader
+          feedOptions: {
+            type: 'all',
+            copyright: `Copyright © ${new Date().getFullYear()} DataFabric Academy.`,
+            createFeedItems: async (params) => {
+              const {blogPosts, defaultCreateFeedItems, ...rest} = params;
+              return defaultCreateFeedItems({
+                // กรองเฉพาะ post ที่ public แล้วเท่านั้น
+                blogPosts: blogPosts.filter((item) => item.metadata.frontMatter.draft !== true),
+                ...rest,
+              });
+            },
+          },
+        },
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -80,6 +99,11 @@ const config: Config = {
           sidebarId: 'tutorialSidebar',
           position: 'left',
           label: 'Curriculum',
+        },
+        {
+          to: '/blog',
+          label: 'Tech Blog',
+          position: 'left',
         },
         {
           href: 'https://github.com/DataFabric-Academy/main-portal',
