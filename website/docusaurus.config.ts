@@ -110,6 +110,12 @@ const config: Config = {
           label: 'GitHub',
           position: 'right',
         },
+        {
+          label: 'SQL Server Course',
+          // ใช้ Absolute URL เพื่อกระโดดข้าม Repo
+          href: 'https://datafabric.academy/course-ms-sql', 
+          position: 'left',
+        },
       ],
     },
     footer: {
