@@ -87,7 +87,7 @@ jobs:
           cargo install obsidian-export --locked || echo "cargo-install-failed=true" >> $GITHUB_OUTPUT
         continue-on-error: true
 
-      - name: Alternative: Download obsidian-export binary
+      - name: Download obsidian-export binary fallback
         if: steps.install-obsidian-export.outcome != 'success'
         run: |
           # Download pre-built binary if cargo install fails
