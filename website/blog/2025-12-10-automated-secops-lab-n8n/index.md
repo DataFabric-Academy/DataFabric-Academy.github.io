@@ -11,6 +11,7 @@ tags:
   - devsecops
   - nuclei
   - nmap
+date: 2025-12-10T19:30
 ---
 
 > **Lab Environment สำหรับการศึกษา** - ระบบจำลองสภาพแวดล้อมสำหรับหลักสูตร "Automated Penetration Testing & DevSecOps with n8n" ออกแบบมาเพื่อให้ผู้เรียนสามารถฝึกเขียน Workflow ควบคุม Security Tools (Nuclei, Nmap) และทดสอบเป้าหมายจำลองได้อย่างปลอดภัยและสมจริง
