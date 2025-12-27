@@ -18,7 +18,7 @@ sidebar_position: 1
 	- Microsoft Power Automate
 	- Microsoft Power BI  
 
-:::tip [My tip]
+:::tip เน้น
 gkdfl;kg;fkgl;fkgglklkl;kg;ldfgkl;
 
 :::
