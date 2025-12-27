@@ -1,19 +1,60 @@
+# Blog Tags for DataFabric Academy
+
+# Security & Operations Tags
+secops:
+  label: SecOps
+  permalink: /blog/tags/secops
+  description: Security Operations and Automation
+
+devsecops:
+  label: DevSecOps
+  permalink: /blog/tags/devsecops
+  description: Development, Security, and Operations
+
+penetration-testing:
+  label: Penetration Testing
+  permalink: /blog/tags/penetration-testing
+  description: Penetration Testing and Security Testing
+
+# Automation Tags
+n8n:
+  label: n8n
+  permalink: /blog/tags/n8n
+  description: n8n Workflow Automation
+
+automation:
+  label: Automation
+  permalink: /blog/tags/automation
+  description: Automation and Workflow
+
+# Security Tools Tags
+nuclei:
+  label: Nuclei
+  permalink: /blog/tags/nuclei
+  description: Nuclei Security Scanner
+
+nmap:
+  label: Nmap
+  permalink: /blog/tags/nmap
+  description: Network Mapper and Security Scanner
+
+# Legacy Tags (from Docusaurus template - can be removed if not used)
 facebook:
   label: Facebook
-  permalink: /facebook
+  permalink: /blog/tags/facebook
   description: Facebook tag description
 
 hello:
   label: Hello
-  permalink: /hello
+  permalink: /blog/tags/hello
   description: Hello tag description
 
 docusaurus:
   label: Docusaurus
-  permalink: /docusaurus
+  permalink: /blog/tags/docusaurus
   description: Docusaurus tag description
 
 hola:
   label: Hola
-  permalink: /hola
+  permalink: /blog/tags/hola
   description: Hola tag description

@@ -25,10 +25,13 @@ const config: Config = {
   trailingSlash: false,
 
   onBrokenLinks: 'warn', // เปลี่ยนเป็น 'throw' เมื่อมั่นใจว่าลิงก์ครบถ้วน
-  onBrokenMarkdownLinks: 'warn',
 
   markdown: {
     mermaid: true,
+    hooks: {
+      onBrokenMarkdownLinks: 'warn', // Migrated from deprecated onBrokenMarkdownLinks
+      onBrokenMarkdownImages: 'warn', // Handle broken images gracefully
+    },
   },
 
   themes: ['@docusaurus/theme-mermaid'],
