@@ -1,13 +1,11 @@
+# Template: Obsidian Sync Workflow
+# Copy this file to each portal repository as .github/workflows/obsidian-sync.yml
+# Replace {{PORTAL_NAME}} and {{REPO_NAME}} with actual values
+
 name: Sync from Obsidian Vault
 
 # Workflow นี้ใช้สำหรับ sync เนื้อหาจาก Obsidian Vault (Private Repo) 
 # มาที่ Docusaurus Repository (Public Repo) ตาม Knowledge Fabric Architecture
-# 
-# Architecture:
-# - Source Layer: Obsidian Vault (Private Repo in Organization)
-# - Transformation Layer: obsidian-export
-# - Orchestration Layer: GitHub Actions (this workflow)
-# - Presentation Layer: Docusaurus (this repo)
 
 on:
   # Trigger จาก repository อื่นใน Organization (Obsidian Vault)
@@ -28,20 +26,20 @@ on:
         default: 'main'
         type: string
       target_path:
-        description: 'Target path in docs (for Main Portal, leave empty)'
+        description: 'Target path in docs (e.g., course-ms-sql/)'
         required: false
         default: ''
         type: string
 
 # ตั้งค่า Permissions สำหรับ Organization-based cross-repo operations
 permissions:
-  contents: write  # ต้องมี write เพื่อ push ไปยัง repo
-  pull-requests: read  # สำหรับ cross-repo access
-  actions: read  # สำหรับ trigger workflows อื่น
+  contents: write
+  pull-requests: read
+  actions: read
 
 # ป้องกันการ sync ซ้ำซ้อน
 concurrency:
-  group: "obsidian-sync"
+  group: "obsidian-sync-{{REPO_NAME}}"
   cancel-in-progress: false
 
 jobs:
@@ -54,16 +52,14 @@ jobs:
       GITHUB_ORG: DataFabric-Academy
       SOURCE_REPO: ${{ github.event.inputs.source_repo || 'obsidian-vault' }}
       SOURCE_BRANCH: ${{ github.event.inputs.source_branch || 'main' }}
-      TARGET_REPO: DataFabric-Academy.github.io
+      TARGET_REPO: {{REPO_NAME}}
       TARGET_BRANCH: main
-      TARGET_PATH: ${{ github.event.inputs.target_path || github.event.client_payload.target_path || '' }}
-      # ใช้ Personal Access Token สำหรับ cross-repo access
-      # ต้องตั้งค่าใน GitHub Secrets: OBSIDIAN_SYNC_TOKEN
+      TARGET_PATH: ${{ github.event.inputs.target_path || '' }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       PAT_TOKEN: ${{ secrets.OBSIDIAN_SYNC_TOKEN }}
     
     steps:
-      - name: Checkout Target Repository (Docusaurus)
+      - name: Checkout Target Repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.OBSIDIAN_SYNC_TOKEN || secrets.GITHUB_TOKEN }}
@@ -93,25 +89,25 @@ jobs:
             echo "exists=false" >> $GITHUB_OUTPUT
             echo "⚠️ Source repository not found: ${{ env.GITHUB_ORG }}/${{ env.SOURCE_REPO }}"
             echo "ℹ️ This workflow requires the Obsidian Vault repository to exist."
-            echo "ℹ️ Please create the repository or skip this workflow if not needed."
           fi
 
       - name: Setup Rust (for obsidian-export)
+        if: steps.check-source-repo.outputs.exists == 'true'
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
 
       - name: Install obsidian-export
+        if: steps.check-source-repo.outputs.exists == 'true'
         id: install-obsidian-export
         run: |
           cargo install obsidian-export --locked || echo "cargo-install-failed=true" >> $GITHUB_OUTPUT
         continue-on-error: true
 
       - name: Download obsidian-export binary fallback
-        if: steps.install-obsidian-export.outcome != 'success'
+        if: steps.check-source-repo.outputs.exists == 'true' && steps.install-obsidian-export.outcome != 'success'
         run: |
-          # Download pre-built binary if cargo install fails
           OBSIDIAN_EXPORT_VERSION="25.3.0"
           wget -q "https://github.com/zoni/obsidian-export/releases/download/v${OBSIDIAN_EXPORT_VERSION}/obsidian-export-${OBSIDIAN_EXPORT_VERSION}-x86_64-unknown-linux-gnu.tar.gz" -O obsidian-export.tar.gz
           tar -xzf obsidian-export.tar.gz
@@ -122,18 +118,12 @@ jobs:
       - name: Export Obsidian Vault to Markdown
         if: steps.check-source-repo.outputs.exists == 'true'
         run: |
-          # สร้าง output directory
           mkdir -p exported-content
-          
-          # Export จาก Obsidian Vault ไปยัง Markdown
-          # ใช้ obsidian-export เพื่อแปลง Wikilinks และจัดการ attachments
           obsidian-export \
             --start-at source-vault \
             --frontmatter=always \
             --no-recursive-embeds \
             exported-content || echo "Export completed with warnings"
-          
-          # ตรวจสอบผลลัพธ์
           ls -la exported-content/ || echo "Export directory check"
           find exported-content -type f -name "*.md" | head -10 || echo "No markdown files found"
 
@@ -166,7 +156,7 @@ jobs:
           fi
           
           # Summary
-          echo "## Content Sync Summary - Main Portal" >> $GITHUB_STEP_SUMMARY
+          echo "## Content Sync Summary - {{PORTAL_NAME}}" >> $GITHUB_STEP_SUMMARY
           echo "- **Source**: ${{ env.GITHUB_ORG }}/${{ env.SOURCE_REPO }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Target**: ${{ env.GITHUB_ORG }}/${{ env.TARGET_REPO }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Target Path**: $TARGET_DOCS_PATH" >> $GITHUB_STEP_SUMMARY
@@ -181,7 +171,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Check if there are changes
           if [ -n "$(git status --porcelain)" ]; then
             git add .
             git commit -m "chore: sync content from Obsidian Vault [skip ci]"
@@ -191,27 +180,21 @@ jobs:
             echo "ℹ️ No changes to commit"
           fi
 
-      - name: Skip Workflow - Repository Not Found
-        if: steps.check-source-repo.outputs.exists != 'true'
-        run: |
-          echo "## ⚠️ Workflow Skipped" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Source repository **${{ env.GITHUB_ORG }}/${{ env.SOURCE_REPO }}** not found." >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Next Steps:" >> $GITHUB_STEP_SUMMARY
-          echo "1. Create the repository: \`${{ env.GITHUB_ORG }}/${{ env.SOURCE_REPO }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "2. Or update the workflow input to use an existing repository" >> $GITHUB_STEP_SUMMARY
-          echo "3. Or disable this workflow if not needed" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Note**: This workflow is optional and only needed if you want to sync from Obsidian Vault automatically." >> $GITHUB_STEP_SUMMARY
-
       - name: Trigger Deployment
         if: steps.check-source-repo.outputs.exists == 'true' && success()
         run: |
-          # Trigger deployment workflow
           curl -X POST \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token ${{ secrets.OBSIDIAN_SYNC_TOKEN || secrets.GITHUB_TOKEN }}" \
             https://api.github.com/repos/${{ env.GITHUB_ORG }}/${{ env.TARGET_REPO }}/actions/workflows/deploy.yml/dispatches \
             -d '{"ref":"${{ env.TARGET_BRANCH }}"}'
         continue-on-error: true
+
+      - name: Skip Workflow - Repository Not Found
+        if: steps.check-source-repo.outputs.exists != 'true'
+        run: |
+          echo "## ⚠️ Workflow Skipped - {{PORTAL_NAME}}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Source repository **${{ env.GITHUB_ORG }}/${{ env.SOURCE_REPO }}** not found." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Note**: This workflow is optional and only needed if you want to sync from Obsidian Vault automatically." >> $GITHUB_STEP_SUMMARY
