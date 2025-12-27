@@ -19,8 +19,8 @@
 **Prerequisites**:
 
 1. **Personal Access Token (PAT)** สำหรับ access private Obsidian vault repo:
-   - ไปที่ GitHub Settings → Developer settings → Personal access tokens → Fine-grained tokens
-   - สร้าง token ใหม่ด้วย permissions:
+   - ดูคำแนะนำละเอียดใน [SETUP_TOKEN.md](../SETUP_TOKEN.md)
+   - สร้าง Fine-grained token ด้วย permissions:
      - `Contents: Read-only` (สำหรับ source repo)
      - `Metadata: Read-only`
    - ตั้งชื่อ token: `OBSIDIAN_VAULT_TOKEN`
