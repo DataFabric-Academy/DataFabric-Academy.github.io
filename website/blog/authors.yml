@@ -32,3 +32,12 @@ DataFabric-Academy:
   page: true
   socials:
     github: DataFabric-Academy
+
+phakkhaphong:
+  name: Phakkhaphong Krittawat
+  title: Data Engineer
+  url: https://phakkhaphong.com
+  image_url: https://github.com/phakkhaphong.png
+  page: true
+  socials:
+    github: phakkhaphong
