@@ -113,7 +113,8 @@ const config: Config = {
         {
           label: 'SQL Server Course',
           // ใช้ Absolute URL เพื่อกระโดดข้าม Repo
-          href: 'https://datafabric.academy/course-ms-sql', 
+          //href: 'https://datafabric.academy/course-ms-sql', 
+          to: '/course-ms-sql',
           position: 'left',
         },
       ],
