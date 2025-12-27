@@ -1,7 +1,7 @@
 [[intro]]
 
 $$E=mc^2$$
-![[NotebookLM-Start.png]]
 
+![NotebookLM Start](./img/NotebookLM-Start.png)
 
 ----

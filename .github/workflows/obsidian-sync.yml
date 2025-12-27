@@ -153,17 +153,28 @@ jobs:
           if [ -d "exported-content" ]; then
             find exported-content -type f -name "*.md" -exec cp --parents {} "$TARGET_DOCS_PATH"/ \; || echo "Markdown files copy completed"
             
+            # Copy images จาก exported-content/assets ไปยัง docs/img/
             if [ -d "exported-content/assets" ]; then
-              mkdir -p "$TARGET_DOCS_PATH/assets"
-              cp -r exported-content/assets/* "$TARGET_DOCS_PATH/assets/" || echo "Exported assets copy completed"
+              mkdir -p "$TARGET_DOCS_PATH/img"
+              find exported-content/assets -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.svg" -o -name "*.webp" \) -exec cp {} "$TARGET_DOCS_PATH/img/" \; || echo "Exported images copy completed"
             fi
           fi
           
-          # Copy assets จาก source vault
+          # Copy images จาก source vault/assets ไปยัง docs/img/
           if [ -d "source-vault/assets" ]; then
-            mkdir -p "$TARGET_DOCS_PATH/assets"
-            cp -rn source-vault/assets/* "$TARGET_DOCS_PATH/assets/" 2>/dev/null || echo "Source assets copy completed"
+            mkdir -p "$TARGET_DOCS_PATH/img"
+            find source-vault/assets -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.svg" -o -name "*.webp" \) -exec cp {} "$TARGET_DOCS_PATH/img/" \; 2>/dev/null || echo "Source images copy completed"
           fi
+          
+          # แก้ไข image wikilinks ใน markdown files
+          # แปลง ![[image.png]] เป็น ![](./img/image.png)
+          find "$TARGET_DOCS_PATH" -type f -name "*.md" -exec sed -i 's/!\[\[\([^]]*\.\(png\|jpg\|jpeg\|gif\|svg\|webp\)\)\]\]/![](\/img\/\1)/g' {} \; || echo "Image wikilinks conversion completed"
+          
+          # แปลง [[image.png]] (non-image wikilinks) เป็น standard markdown image links
+          find "$TARGET_DOCS_PATH" -type f -name "*.md" -exec sed -i 's/\[\[\([^]]*\.\(png\|jpg\|jpeg\|gif\|svg\|webp\)\)\]\]/![](\/img\/\1)/g' {} \; || echo "Non-image wikilinks conversion completed"
+          
+          # แปลง absolute path /img/ เป็น relative path ./img/ (สำหรับ docs)
+          find "$TARGET_DOCS_PATH" -type f -name "*.md" -exec sed -i 's|(/img/|(./img/|g' {} \; || echo "Path conversion completed"
           
           # Summary
           echo "## Content Sync Summary - Main Portal" >> $GITHUB_STEP_SUMMARY
@@ -171,7 +182,7 @@ jobs:
           echo "- **Target**: ${{ env.GITHUB_ORG }}/${{ env.TARGET_REPO }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Target Path**: $TARGET_DOCS_PATH" >> $GITHUB_STEP_SUMMARY
           echo "- **Markdown files**: $(find "$TARGET_DOCS_PATH" -type f -name "*.md" 2>/dev/null | wc -l)" >> $GITHUB_STEP_SUMMARY
-          echo "- **Image files**: $(find "$TARGET_DOCS_PATH/assets" -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.svg" \) 2>/dev/null | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Image files**: $(find "$TARGET_DOCS_PATH/img" -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.svg" -o -name "*.webp" \) 2>/dev/null | wc -l)" >> $GITHUB_STEP_SUMMARY
           echo "- **Total files synced**: $(find "$TARGET_DOCS_PATH" -type f 2>/dev/null | wc -l)" >> $GITHUB_STEP_SUMMARY
 
       - name: Commit and Push Changes
