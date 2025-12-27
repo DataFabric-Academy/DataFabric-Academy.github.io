@@ -23,3 +23,12 @@ slorber:
     linkedin: sebastienlorber
     github: slorber
     newsletter: https://thisweekinreact.com
+
+DataFabric-Academy:
+  name: DataFabric Academy
+  title: Academy-as-Code for Data Professionals
+  url: https://datafabric.academy
+  image_url: https://github.com/DataFabric-Academy.png
+  page: true
+  socials:
+    github: DataFabric-Academy
