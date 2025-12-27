@@ -1,0 +1,66 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    # Smart Trigger: ทำงานเฉพาะเมื่อมีการแก้ไขในโฟลเดอร์ website หรือ workflow นี้เท่านั้น
+    paths:
+      - 'website/**'
+      - '.github/workflows/deploy.yml'
+  
+  # อนุญาตให้กดรัน manual ได้จากหน้าเว็บ GitHub
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# ป้องกันการ Deploy ซ้ำซ้อนถ้ามีการ push ถี่ๆ
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build Docusaurus
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+          # สำคัญ: บอกตำแหน่ง lock file ให้ถูกต้องเพื่อใช้ Cache
+          cache-dependency-path: website/package-lock.json
+
+      - name: Install Dependencies
+        # สำคัญ: เข้าไปทำงานในโฟลเดอร์ website
+        working-directory: website
+        run: npm ci
+
+      - name: Build Website
+        working-directory: website
+        run: npm run build
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # ชี้เป้า folder ที่ build เสร็จแล้ว (Docusaurus build ลง folder 'build')
+          path: website/build
+
+  deploy:
+    name: Deploy to Production
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
