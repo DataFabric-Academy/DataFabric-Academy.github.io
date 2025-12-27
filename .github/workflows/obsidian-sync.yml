@@ -1,0 +1,165 @@
+name: Sync from Obsidian Vault
+
+# Workflow นี้ใช้สำหรับ sync เนื้อหาจาก Obsidian Vault (Private Repo) 
+# มาที่ Docusaurus Repository (Public Repo) ตาม Knowledge Fabric Architecture
+# 
+# Architecture:
+# - Source Layer: Obsidian Vault (Private Repo in Organization)
+# - Transformation Layer: obsidian-export
+# - Orchestration Layer: GitHub Actions (this workflow)
+# - Presentation Layer: Docusaurus (this repo)
+
+on:
+  # Trigger จาก repository อื่นใน Organization (Obsidian Vault)
+  repository_dispatch:
+    types: [obsidian-sync]
+  
+  # หรือ trigger manual จาก GitHub UI
+  workflow_dispatch:
+    inputs:
+      source_repo:
+        description: 'Source Obsidian Vault Repository'
+        required: true
+        default: 'obsidian-vault'
+        type: string
+      source_branch:
+        description: 'Source Branch'
+        required: false
+        default: 'main'
+        type: string
+
+# ตั้งค่า Permissions สำหรับ Organization-based cross-repo operations
+permissions:
+  contents: write  # ต้องมี write เพื่อ push ไปยัง repo
+  pull-requests: read  # สำหรับ cross-repo access
+  actions: read  # สำหรับ trigger workflows อื่น
+
+# ป้องกันการ sync ซ้ำซ้อน
+concurrency:
+  group: "obsidian-sync"
+  cancel-in-progress: false
+
+jobs:
+  sync-from-obsidian:
+    name: Sync from Obsidian Vault
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    env:
+      GITHUB_ORG: DataFabric-Academy
+      SOURCE_REPO: ${{ github.event.inputs.source_repo || 'obsidian-vault' }}
+      SOURCE_BRANCH: ${{ github.event.inputs.source_branch || 'main' }}
+      TARGET_REPO: DataFabric-Academy.github.io
+      TARGET_BRANCH: main
+      # ใช้ Personal Access Token สำหรับ cross-repo access
+      # ต้องตั้งค่าใน GitHub Secrets: OBSIDIAN_SYNC_TOKEN
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PAT_TOKEN: ${{ secrets.OBSIDIAN_SYNC_TOKEN }}
+    
+    steps:
+      - name: Checkout Target Repository (Docusaurus)
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.OBSIDIAN_SYNC_TOKEN || secrets.GITHUB_TOKEN }}
+          repository: ${{ env.GITHUB_ORG }}/${{ env.TARGET_REPO }}
+          ref: ${{ env.TARGET_BRANCH }}
+          path: target-repo
+          fetch-depth: 0
+
+      - name: Checkout Source Repository (Obsidian Vault)
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.OBSIDIAN_SYNC_TOKEN || secrets.GITHUB_TOKEN }}
+          repository: ${{ env.GITHUB_ORG }}/${{ env.SOURCE_REPO }}
+          ref: ${{ env.SOURCE_BRANCH }}
+          path: source-vault
+          fetch-depth: 0
+
+      - name: Setup Rust (for obsidian-export)
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Install obsidian-export
+        run: |
+          cargo install obsidian-export --locked
+        continue-on-error: true
+
+      - name: Alternative: Download obsidian-export binary
+        if: failure()
+        run: |
+          # Download pre-built binary if cargo install fails
+          OBSIDIAN_EXPORT_VERSION="25.3.0"
+          wget -q "https://github.com/zoni/obsidian-export/releases/download/v${OBSIDIAN_EXPORT_VERSION}/obsidian-export-${OBSIDIAN_EXPORT_VERSION}-x86_64-unknown-linux-gnu.tar.gz" -O obsidian-export.tar.gz
+          tar -xzf obsidian-export.tar.gz
+          chmod +x obsidian-export
+          sudo mv obsidian-export /usr/local/bin/
+        continue-on-error: true
+
+      - name: Export Obsidian Vault to Markdown
+        run: |
+          # สร้าง output directory
+          mkdir -p exported-content
+          
+          # Export จาก Obsidian Vault ไปยัง Markdown
+          # ใช้ obsidian-export เพื่อแปลง Wikilinks และจัดการ attachments
+          obsidian-export \
+            --start-at source-vault \
+            --frontmatter=always \
+            --no-recursive-embeds \
+            exported-content || echo "Export completed with warnings"
+          
+          # ตรวจสอบผลลัพธ์
+          ls -la exported-content/ || echo "Export directory check"
+          find exported-content -type f -name "*.md" | head -10 || echo "No markdown files found"
+
+      - name: Process and Copy Content
+        run: |
+          # Copy exported content ไปยัง target repository
+          # ปรับ path ตามโครงสร้าง Docusaurus
+          mkdir -p target-repo/website/docs
+          
+          # Copy markdown files
+          if [ -d "exported-content" ]; then
+            cp -r exported-content/* target-repo/website/docs/ || echo "Copy completed"
+          fi
+          
+          # Copy assets (images, etc.)
+          if [ -d "source-vault/assets" ]; then
+            mkdir -p target-repo/website/docs/assets
+            cp -r source-vault/assets/* target-repo/website/docs/assets/ || echo "Assets copy completed"
+          fi
+          
+          # แสดง summary
+          echo "## Content Sync Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Source**: ${{ env.GITHUB_ORG }}/${{ env.SOURCE_REPO }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Target**: ${{ env.GITHUB_ORG }}/${{ env.TARGET_REPO }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Files synced**: $(find target-repo/website/docs -type f | wc -l)" >> $GITHUB_STEP_SUMMARY
+
+      - name: Commit and Push Changes
+        working-directory: target-repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Check if there are changes
+          if [ -n "$(git status --porcelain)" ]; then
+            git add .
+            git commit -m "chore: sync content from Obsidian Vault [skip ci]"
+            git push origin ${{ env.TARGET_BRANCH }}
+            echo "✅ Changes pushed successfully"
+          else
+            echo "ℹ️ No changes to commit"
+          fi
+
+      - name: Trigger Deployment
+        if: success()
+        run: |
+          # Trigger deployment workflow
+          curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${{ secrets.OBSIDIAN_SYNC_TOKEN || secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ env.GITHUB_ORG }}/${{ env.TARGET_REPO }}/actions/workflows/deploy.yml/dispatches \
+            -d '{"ref":"${{ env.TARGET_BRANCH }}"}'
+        continue-on-error: true
