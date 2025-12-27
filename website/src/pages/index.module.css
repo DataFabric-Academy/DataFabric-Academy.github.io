@@ -109,50 +109,33 @@
   font-size: 1.1rem;
   padding: 1rem 2rem;
   border-radius: 8px;
-  font-weight: 700;
+  font-weight: 600;
   transition: all 0.3s ease;
-  border: none;
-  text-transform: none;
-  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .buttons .button--primary {
-  /* สีขาวสว่างมาก - ตัดกับพื้นหลังสีฟ้าชัดเจน */
-  background: #ffffff !important;
-  color: #0078d4 !important;
-  border: 3px solid #ffffff !important;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), 
-              0 0 0 1px rgba(255, 255, 255, 0.5),
-              inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  font-weight: 700;
+  background: white;
+  color: var(--ifm-color-primary);
+  border: 2px solid white;
 }
 
 .buttons .button--primary:hover {
-  background: #f0f0f0 !important;
-  color: #005a9e !important;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4), 
-              0 0 0 2px rgba(255, 255, 255, 0.6),
-              inset 0 1px 0 rgba(255, 255, 255, 1);
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
 .buttons .button--secondary {
-  /* สีดำเข้ม - ตัดกับพื้นหลังสีฟ้าชัดเจนมาก */
-  background: #000000 !important;
-  color: #ffffff !important;
-  border: 3px solid #000000 !important;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5),
-              0 0 0 1px rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  font-weight: 700;
+  background: transparent;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.8);
 }
 
 .buttons .button--secondary:hover {
-  background: #1a1a1a !important;
-  border-color: #1a1a1a !important;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6),
-              0 0 0 2px rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: white;
+  transform: translateY(-2px);
 }
 
 /* ===== Features Section ===== */
