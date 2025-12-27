@@ -28,5 +28,8 @@ Thumbs.db
 *.swo
 *~
 
+# Cursor AI rules (local only, not for GitHub)
+.cursorrules
+
 # Obsidian specific (ถ้าเผลอเปิด Vault ที่นี่)
 .obsidian/
