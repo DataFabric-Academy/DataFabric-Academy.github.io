@@ -112,8 +112,9 @@ const config: Config = {
         },
         {
           label: 'SQL Server Course',
-          // ใช้ to แทน href เพื่อไม่เปิด tab ใหม่
-          to: '/course-ms-sql',
+          // ใช้ href กับ target: '_self' เพื่อ navigate ไปที่ deployment แยกโดยไม่เปิด tab ใหม่
+          href: 'https://datafabric.academy/course-ms-sql/',
+          target: '_self',
           position: 'left',
         },
       ],
