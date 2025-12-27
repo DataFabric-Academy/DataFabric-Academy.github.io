@@ -106,7 +106,7 @@ const config: Config = {
           position: 'left',
         },
         {
-          href: 'https://github.com/DataFabric-Academy/main-portal',
+          href: 'https://github.com/DataFabric-Academy/DataFabric-Academy.github.io',
           label: 'GitHub',
           position: 'right',
         },
