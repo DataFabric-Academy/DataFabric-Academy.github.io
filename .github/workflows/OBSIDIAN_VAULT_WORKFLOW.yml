@@ -1,0 +1,108 @@
+# Workflow สำหรับ Obsidian Vault Repository
+# ไฟล์นี้ต้องถูก copy ไปยัง .github/workflows/trigger-sync.yml ใน obsidian-vault repository
+#
+# ขั้นตอนการใช้งาน:
+# 1. ไปที่ repository: DataFabric-Academy/obsidian-vault
+# 2. สร้างไฟล์: .github/workflows/trigger-sync.yml
+# 3. Copy เนื้อหาทั้งหมดจากไฟล์นี้ไปวาง
+# 4. ตั้งค่า Secret: OBSIDIAN_SYNC_TOKEN (ใช้ PAT token เดียวกัน)
+
+name: Trigger All Portals Sync
+
+on:
+  push:
+    branches:
+      - main
+    # Trigger เมื่อมีการแก้ไข markdown files หรือ assets
+    paths:
+      - '**.md'
+      - 'assets/**'
+      - '.obsidian/**'
+
+permissions:
+  contents: read
+
+jobs:
+  trigger-all-portals:
+    name: Trigger Sync to All Portals
+    runs-on: ubuntu-latest
+    
+    env:
+      GITHUB_ORG: DataFabric-Academy
+      SOURCE_REPO: obsidian-vault
+      SOURCE_BRANCH: ${{ github.ref_name }}
+    
+    steps:
+      - name: Trigger Main Portal Sync
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.OBSIDIAN_SYNC_TOKEN }}
+          repository: DataFabric-Academy/DataFabric-Academy.github.io
+          event-type: obsidian-sync
+          client-payload: |
+            {
+              "source_repo": "${{ env.SOURCE_REPO }}",
+              "source_branch": "${{ env.SOURCE_BRANCH }}",
+              "target_path": "",
+              "commit_sha": "${{ github.sha }}",
+              "commit_message": "${{ github.event.head_commit.message }}"
+            }
+
+      - name: Trigger SQL Server Course Sync
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.OBSIDIAN_SYNC_TOKEN }}
+          repository: DataFabric-Academy/course-ms-sql
+          event-type: obsidian-sync
+          client-payload: |
+            {
+              "source_repo": "${{ env.SOURCE_REPO }}",
+              "source_branch": "${{ env.SOURCE_BRANCH }}",
+              "target_path": "course-ms-sql/",
+              "commit_sha": "${{ github.sha }}",
+              "commit_message": "${{ github.event.head_commit.message }}"
+            }
+
+      - name: Trigger Power BI Course Sync
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.OBSIDIAN_SYNC_TOKEN }}
+          repository: DataFabric-Academy/course-power-bi
+          event-type: obsidian-sync
+          client-payload: |
+            {
+              "source_repo": "${{ env.SOURCE_REPO }}",
+              "source_branch": "${{ env.SOURCE_BRANCH }}",
+              "target_path": "course-power-bi/",
+              "commit_sha": "${{ github.sha }}",
+              "commit_message": "${{ github.event.head_commit.message }}"
+            }
+
+      - name: Trigger n8n Course Sync
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.OBSIDIAN_SYNC_TOKEN }}
+          repository: DataFabric-Academy/course-n8n
+          event-type: obsidian-sync
+          client-payload: |
+            {
+              "source_repo": "${{ env.SOURCE_REPO }}",
+              "source_branch": "${{ env.SOURCE_BRANCH }}",
+              "target_path": "course-n8n/",
+              "commit_sha": "${{ github.sha }}",
+              "commit_message": "${{ github.event.head_commit.message }}"
+            }
+
+      - name: Summary
+        run: |
+          echo "## ✅ All Portals Triggered" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Successfully triggered sync workflows for:" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Main Portal (DataFabric-Academy.github.io)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ SQL Server Course (course-ms-sql)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Power BI Course (course-power-bi)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ n8n Course (course-n8n)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Message**: ${{ github.event.head_commit.message }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch**: ${{ env.SOURCE_BRANCH }}" >> $GITHUB_STEP_SUMMARY
