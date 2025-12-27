@@ -82,12 +82,13 @@ jobs:
           override: true
 
       - name: Install obsidian-export
+        id: install-obsidian-export
         run: |
-          cargo install obsidian-export --locked
+          cargo install obsidian-export --locked || echo "cargo-install-failed=true" >> $GITHUB_OUTPUT
         continue-on-error: true
 
       - name: Alternative: Download obsidian-export binary
-        if: failure()
+        if: steps.install-obsidian-export.outcome != 'success'
         run: |
           # Download pre-built binary if cargo install fails
           OBSIDIAN_EXPORT_VERSION="25.3.0"
