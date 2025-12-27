@@ -1,30 +1,282 @@
 /**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
+ * DataFabric Academy - Custom CSS
+ * Microsoft Fabric Inspired Theme
+ * Focus: Modern, Professional Design with Microsoft Azure/Fabric Brand Colors
  */
 
-/* You can override the default Infima variables here. */
+/* 1. Import Professional Fonts */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+/* 2. Microsoft Fabric Color Palette - Light Mode */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  /* Microsoft Azure/Fabric Blue Primary Palette */
+  --ifm-color-primary: #0078d4;
+  --ifm-color-primary-dark: #006cc0;
+  --ifm-color-primary-darker: #0066b5;
+  --ifm-color-primary-darkest: #005495;
+  --ifm-color-primary-light: #218ce0;
+  --ifm-color-primary-lighter: #3295e3;
+  --ifm-color-primary-lightest: #62ade9;
+  
+  /* Background Colors - Clean and Modern */
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #f8f9fa;
+  
+  /* Text Colors */
+  --ifm-font-color-base: #1a1a1a;
+  --ifm-heading-color: #1a1a1a;
+  --ifm-color-content: #323130;
+  --ifm-color-content-secondary: #605e5c;
+  
+  /* Code Colors */
+  --ifm-code-font-size: 90%;
+  --ifm-code-background: #f5f5f5;
+  --ifm-code-color: #d13438;
+  
+  /* Border Colors */
+  --ifm-color-emphasis-200: #edebe9;
+  --ifm-color-emphasis-300: #e1dfdd;
+  
+  /* Link Colors */
+  --ifm-link-color: #0078d4;
+  --ifm-link-hover-color: #006cc0;
+  
+  /* Highlighted Code Line */
+  --docusaurus-highlighted-code-line-bg: rgba(0, 120, 212, 0.1);
+  
+  /* Typography */
+  --ifm-font-family-base: 'IBM Plex Sans Thai', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --ifm-font-size-base: 17px;
+  --ifm-line-height-base: 1.7;
+  
+  /* Spacing */
+  --ifm-spacing-horizontal: 1.5rem;
+  
+  /* Shadows - Subtle and Modern */
+  --ifm-global-shadow-lw: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --ifm-global-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --ifm-global-shadow-tl: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
+/* 3. Microsoft Fabric Color Palette - Dark Mode */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  /* Azure Blue - Brighter for Dark Mode */
+  --ifm-color-primary: #40a6ff;
+  --ifm-color-primary-dark: #218ce0;
+  --ifm-color-primary-darker: #0078d4;
+  --ifm-color-primary-darkest: #006cc0;
+  --ifm-color-primary-light: #62ade9;
+  --ifm-color-primary-lighter: #7bb8ed;
+  --ifm-color-primary-lightest: #97d4fb;
+  
+  /* Dark Background - Microsoft Fabric Dark Theme */
+  --ifm-background-color: #0f1117;
+  --ifm-background-surface-color: #1a1d29;
+  
+  /* Text Colors - High Contrast */
+  --ifm-font-color-base: #ffffff;
+  --ifm-heading-color: #ffffff;
+  --ifm-color-content: #e1dfdd;
+  --ifm-color-content-secondary: #a19f9d;
+  
+  /* Code Colors */
+  --ifm-code-background: #1e1e1e;
+  --ifm-code-color: #d13438;
+  
+  /* Border Colors */
+  --ifm-color-emphasis-200: #2d2d30;
+  --ifm-color-emphasis-300: #3e3e42;
+  
+  /* Link Colors */
+  --ifm-link-color: #40a6ff;
+  --ifm-link-hover-color: #62ade9;
+  
+  /* Highlighted Code Line */
+  --docusaurus-highlighted-code-line-bg: rgba(64, 166, 255, 0.2);
+}
+
+/* 4. Thai Content Optimization */
+p, li, span, a {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: 0.01rem;
+}
+
+/* 5. Modern Code Block Styling */
+code {
+  font-family: 'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+  background-color: var(--ifm-code-background);
+  color: var(--ifm-code-color);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.docusaurus-highlight-code-line {
+  background-color: var(--docusaurus-highlighted-code-line-bg);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
+
+/* 6. Navbar - Microsoft Fabric Style */
+.navbar {
+  box-shadow: var(--ifm-global-shadow-lw);
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+[data-theme='dark'] .navbar {
+  background-color: rgba(15, 17, 23, 0.95);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.navbar__brand:hover {
+  color: var(--ifm-color-primary);
+}
+
+/* 7. Buttons - Microsoft Fabric Style */
+.button {
+  border-radius: 4px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.button--primary {
+  background-color: var(--ifm-color-primary);
+  border-color: var(--ifm-color-primary);
+}
+
+.button--primary:hover {
+  background-color: var(--ifm-color-primary-dark);
+  border-color: var(--ifm-color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--ifm-global-shadow-md);
+}
+
+.button--secondary {
+  background-color: transparent;
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
+}
+
+.button--secondary:hover {
+  background-color: var(--ifm-color-primary);
+  color: white;
+}
+
+/* 8. Cards - Modern and Clean */
+.card {
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  box-shadow: var(--ifm-global-shadow-lw);
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--ifm-global-shadow-md);
+  transform: translateY(-2px);
+}
+
+[data-theme='dark'] .card {
+  background-color: var(--ifm-background-surface-color);
+  border-color: var(--ifm-color-emphasis-300);
+}
+
+/* 9. Sidebar - Clean Design */
+.theme-doc-sidebar-container {
+  border-right: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.menu__link--active {
+  font-weight: 600;
+  background-color: rgba(0, 120, 212, 0.1);
+  color: var(--ifm-color-primary);
+  border-left: 3px solid var(--ifm-color-primary);
+}
+
+[data-theme='dark'] .menu__link--active {
+  background-color: rgba(64, 166, 255, 0.15);
+  color: var(--ifm-color-primary);
+}
+
+/* 10. Footer - Dark Theme */
+.footer {
+  background-color: #1a1d29;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+[data-theme='dark'] .footer {
+  background-color: #0f1117;
+}
+
+.footer__link-item:hover {
+  color: var(--ifm-color-primary-light);
+}
+
+/* 11. Hero Section - Gradient Background */
+.hero {
+  background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%);
+}
+
+[data-theme='dark'] .hero {
+  background: linear-gradient(135deg, #0f1117 0%, #1a1d29 50%, #0078d4 100%);
+}
+
+/* 12. Table Styling */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+table thead {
+  background-color: var(--ifm-color-emphasis-100);
+}
+
+table th {
+  border-bottom: 2px solid var(--ifm-color-emphasis-300);
+  font-weight: 600;
+}
+
+table td {
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+/* 13. Alert Boxes - Microsoft Fabric Style */
+.alert {
+  border-radius: 4px;
+  border-left: 4px solid;
+}
+
+.alert--info {
+  border-left-color: var(--ifm-color-primary);
+  background-color: rgba(0, 120, 212, 0.1);
+}
+
+.alert--success {
+  border-left-color: #107c10;
+  background-color: rgba(16, 124, 16, 0.1);
+}
+
+.alert--warning {
+  border-left-color: #ffaa44;
+  background-color: rgba(255, 170, 68, 0.1);
+}
+
+.alert--danger {
+  border-left-color: #d13438;
+  background-color: rgba(209, 52, 56, 0.1);
+}
+
+/* 14. Responsive Design */
+@media (max-width: 996px) {
+  :root {
+    --ifm-font-size-base: 16px;
+  }
+}
+
+/* 15. Smooth Transitions */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
