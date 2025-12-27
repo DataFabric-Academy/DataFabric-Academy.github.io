@@ -1,8 +1,9 @@
 ---
 slug: automated-secops-lab-n8n
-title: '🛡️ Automated Penetration Testing & SecOps Lab with n8n'
+title: 🛡️ Automated Penetration Testing & SecOps Lab with n8n
 authors:
   - DataFabric-Academy
+  - phakkhaphong
 tags:
   - secops
   - n8n
