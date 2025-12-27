@@ -1,4 +1,4 @@
-# DataFabric Academy Main Portal - Website
+# Data Fabric Academy Main Portal - Website
 
 This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
 
@@ -48,4 +48,4 @@ This portal is deployed via GitHub Actions to GitHub Pages under the `DataFabric
 
 ## License
 
-Copyright © DataFabric Academy. Built with Knowledge Fabric System.
+Copyright © Data Fabric Academy. Built with Knowledge Fabric System.

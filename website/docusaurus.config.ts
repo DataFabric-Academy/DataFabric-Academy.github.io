@@ -9,7 +9,7 @@ import rehypeKatex from 'rehype-katex';
 const wikiLinkPlugin = require('remark-wiki-link');
 
 const config: Config = {
-  title: 'DataFabric Academy',
+  title: 'Data Fabric Academy',
   tagline: 'Knowledge Fabric: Academy-as-Code System',
   favicon: 'img/favicon.ico',
 
@@ -56,7 +56,7 @@ const config: Config = {
           // แนะนำให้เปิด feed เพื่อรองรับ RSS Reader
           feedOptions: {
             type: 'all',
-            copyright: `Copyright © ${new Date().getFullYear()} DataFabric Academy.`,
+            copyright: `Copyright © ${new Date().getFullYear()} Data Fabric Academy.`,
             createFeedItems: async (params) => {
               const {blogPosts, defaultCreateFeedItems, ...rest} = params;
               return defaultCreateFeedItems({
@@ -88,7 +88,7 @@ const config: Config = {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
     navbar: {
-      title: 'DataFabric Academy',
+      title: 'Data Fabric Academy',
       logo: {
         alt: 'Knowledge Fabric Logo',
         src: 'img/logo.svg',
@@ -155,7 +155,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} DataFabric Academy. Built with Knowledge Fabric System.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Data Fabric Academy. Built with Knowledge Fabric System.`,
     },
     prism: {
       theme: prismThemes.github,

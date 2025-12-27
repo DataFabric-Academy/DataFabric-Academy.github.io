@@ -1,4 +1,4 @@
-# 🌐 i18n Structure Guide - DataFabric Academy
+# 🌐 i18n Structure Guide - Data Fabric Academy
 
 คู่มือการจัดการเนื้อหาหลายภาษา (Internationalization) สำหรับ Docusaurus
 
@@ -81,7 +81,7 @@ website/
 ```json
 {
   "title": {
-    "message": "DataFabric Academy",
+    "message": "Data Fabric Academy",
     "description": "The title in the navbar"
   },
   "item.label.Curriculum": {

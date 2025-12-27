@@ -2,13 +2,13 @@
 sidebar_position: 1
 ---
 
-# รู้จัก DataFabric Academy
+# รู้จัก Data Fabric Academy
 
-ยินดีต้อนรับสู่ **DataFabric Academy** - แพลตฟอร์มการเรียนรู้แบบ **Academy-as-Code** สำหรับ Data Professionals ที่ต้องการพัฒนาทักษะด้าน Data Engineering, Business Analytics และ Cloud Technologies
+ยินดีต้อนรับสู่ **Data Fabric Academy** - แพลตฟอร์มการเรียนรู้แบบ **Academy-as-Code** สำหรับ Data Professionals ที่ต้องการพัฒนาทักษะด้าน Data Engineering, Business Analytics และ Cloud Technologies
 
 ## 🎯 เกี่ยวกับเรา
 
-DataFabric Academy เป็นระบบการเรียนรู้ที่ออกแบบมาเพื่อประกอบการบรรยายของ **อาจารย์ภัคพงศ์ กฤตวัฒน์** โดยใช้แนวคิด **Knowledge Fabric** ที่ผสมผสานระหว่าง:
+Data Fabric Academy เป็นระบบการเรียนรู้ที่ออกแบบมาเพื่อประกอบการบรรยายของ **อาจารย์ภัคพงศ์ กฤตวัฒน์** โดยใช้แนวคิด **Knowledge Fabric** ที่ผสมผสานระหว่าง:
 
 - **Obsidian** - สำหรับจัดการความรู้แบบ Zettelkasten
 - **Git & GitHub** - สำหรับ version control และ collaboration
