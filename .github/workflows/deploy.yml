@@ -2,106 +2,42 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
-    # Smart Trigger: ทำงานเฉพาะเมื่อมีการแก้ไขในโฟลเดอร์ website หรือ workflow นี้เท่านั้น
+    branches: [main]
     paths:
-      - 'website/**'
+      - 'docs/**'
+      - 'src/**'
+      - 'static/**'
+      - 'docusaurus.config.ts'
+      - 'package.json'
       - '.github/workflows/deploy.yml'
-  
-  # อนุญาตให้กดรัน manual ได้จากหน้าเว็บ GitHub
   workflow_dispatch:
 
-# ตั้งค่า Permissions สำหรับ Organization-based repositories
 permissions:
   contents: read
   pages: write
   id-token: write
-  # เพิ่ม permissions สำหรับการเข้าถึง Organization repositories (ถ้าจำเป็น)
-  # pull-requests: read  # สำหรับ cross-repo operations
-
-# ป้องกันการ Deploy ซ้ำซ้อนถ้ามีการ push ถี่ๆ
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
 
 jobs:
   build:
-    name: Build Docusaurus
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    
-    # ตั้งค่า environment variables สำหรับ Organization
-    env:
-      GITHUB_ORG: DataFabric-Academy
-      REPO_NAME: DataFabric-Academy.github.io
-    
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          # ใช้ fetch-depth: 0 เพื่อให้ได้ full history (ถ้าจำเป็นสำหรับ cross-repo operations)
-          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
-          # สำคัญ: บอกตำแหน่ง lock file ให้ถูกต้องเพื่อใช้ Cache
-          cache-dependency-path: website/package-lock.json
+          cache-dependency-path: package-lock.json # เปลี่ยนจาก website/package-lock.json
 
       - name: Install Dependencies
-        # สำคัญ: เข้าไปทำงานในโฟลเดอร์ website
-        working-directory: website
-        run: npm ci
+        run: npm ci # ตัด working-directory: website ออก
 
       - name: Build Website
-        working-directory: website
-        run: npm run build
-        env:
-          # ตั้งค่า environment variables สำหรับ build process
-          NODE_ENV: production
-
-      - name: Check build output size
-        working-directory: website
-        run: |
-          du -sh build/ || echo "Build directory check"
-          find build -type f | wc -l || echo "File count check"
-          echo "Build completed successfully for ${{ env.GITHUB_ORG }}/${{ env.REPO_NAME }}"
+        run: npm run build # ตัด working-directory: website ออก
 
       - name: Upload Artifact
-        uses: actions/upload-pages-artifact@v4
-        timeout-minutes: 15
-        continue-on-error: false
+        uses: actions/upload-pages-artifact@v3
         with:
-          # ชี้เป้า folder ที่ build เสร็จแล้ว (Docusaurus build ลง folder 'build')
-          path: website/build
-          # ลด retention days เพื่อลดภาระในการเก็บ artifact
-          retention-days: 1
-
-  deploy:
-    name: Deploy to Production
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    
-    # ตั้งค่า environment variables สำหรับ Organization
-    env:
-      GITHUB_ORG: DataFabric-Academy
-      REPO_NAME: DataFabric-Academy.github.io
-    
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-      
-      - name: Deployment Summary
-        run: |
-          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
-          echo "- **Organization**: ${{ env.GITHUB_ORG }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Repository**: ${{ env.REPO_NAME }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Status**: ✅ Successfully deployed" >> $GITHUB_STEP_SUMMARY
-          echo "- **URL**: ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
+          path: build # Docusaurus จะ build ลงที่ /build ที่ root ทันที

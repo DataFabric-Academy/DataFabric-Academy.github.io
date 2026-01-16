@@ -1,35 +1,20 @@
 # Dependencies
-node_modules/
-website/node_modules/
+/node_modules
 
-# Build outputs
-website/build/
-website/.docusaurus/
+# Production
+/build
 
-# Environment variables
-.env
+# Generated files
+.docusaurus
+.cache-loader
+
+# Misc
+.DS_Store
 .env.local
-.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Logs
-*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Cursor AI rules (local only, not for GitHub)
-.cursorrules
-
-# Obsidian specific (ถ้าเผลอเปิด Vault ที่นี่)
-.obsidian/

@@ -3,11 +3,11 @@ name: Sync from Obsidian Vault
 # Workflow นี้ใช้สำหรับ sync เนื้อหาจาก Obsidian Vault (Private Repo) 
 # มาที่ Docusaurus Repository (Public Repo) ตาม Knowledge Fabric Architecture
 # 
-# Architecture:
+# Architecture (Flattened):
 # - Source Layer: Obsidian Vault (Private Repo in Organization)
 # - Transformation Layer: obsidian-export
-# - Orchestration Layer: GitHub Actions (this workflow)
-# - Presentation Layer: Docusaurus (this repo)
+# - Orchestration Layer: GitHub Actions
+# - Presentation Layer: Docusaurus (Root Directory)
 
 on:
   # Trigger จาก repository อื่นใน Organization (Obsidian Vault)
@@ -28,18 +28,16 @@ on:
         default: 'main'
         type: string
       target_path:
-        description: 'Target path in docs (for Main Portal, leave empty)'
+        description: 'Target path in docs (leave empty for root docs)'
         required: false
         default: ''
         type: string
 
-# ตั้งค่า Permissions สำหรับ Organization-based cross-repo operations
 permissions:
-  contents: write  # ต้องมี write เพื่อ push ไปยัง repo
-  pull-requests: read  # สำหรับ cross-repo access
-  actions: read  # สำหรับ trigger workflows อื่น
+  contents: write
+  pull-requests: read
+  actions: read
 
-# ป้องกันการ sync ซ้ำซ้อน
 concurrency:
   group: "obsidian-sync"
   cancel-in-progress: false
@@ -54,21 +52,17 @@ jobs:
       GITHUB_ORG: DataFabric-Academy
       SOURCE_REPO: ${{ github.event.inputs.source_repo || 'obsidian-vault' }}
       SOURCE_BRANCH: ${{ github.event.inputs.source_branch || 'main' }}
-      TARGET_REPO: DataFabric-Academy.github.io
+      TARGET_REPO: ${{ github.event.repository.name }} # ใช้ชื่อ Repo ปัจจุบันอัตโนมัติ
       TARGET_BRANCH: main
       TARGET_PATH: ${{ github.event.inputs.target_path || github.event.client_payload.target_path || '' }}
-      # ใช้ Personal Access Token สำหรับ cross-repo access
-      # ต้องตั้งค่าใน GitHub Secrets: OBSIDIAN_SYNC_TOKEN
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      PAT_TOKEN: ${{ secrets.OBSIDIAN_SYNC_TOKEN }}
+      PAT_TOKEN: ${{ secrets.OBSIDIAN_SYNC_TOKEN }} # ต้องตั้งค่า Secret นี้ใน Organization
     
     steps:
       - name: Checkout Target Repository (Docusaurus)
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.OBSIDIAN_SYNC_TOKEN || secrets.GITHUB_TOKEN }}
-          repository: ${{ env.GITHUB_ORG }}/${{ env.TARGET_REPO }}
-          ref: ${{ env.TARGET_BRANCH }}
+          token: ${{ env.PAT_TOKEN || env.GITHUB_TOKEN }}
           path: target-repo
           fetch-depth: 0
 
@@ -76,7 +70,7 @@ jobs:
         id: checkout-source
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.OBSIDIAN_SYNC_TOKEN || secrets.GITHUB_TOKEN }}
+          token: ${{ env.PAT_TOKEN || env.GITHUB_TOKEN }}
           repository: ${{ env.GITHUB_ORG }}/${{ env.SOURCE_REPO }}
           ref: ${{ env.SOURCE_BRANCH }}
           path: source-vault
@@ -88,102 +82,63 @@ jobs:
         run: |
           if [ -d "source-vault/.git" ]; then
             echo "exists=true" >> $GITHUB_OUTPUT
-            echo "✅ Source repository found: ${{ env.GITHUB_ORG }}/${{ env.SOURCE_REPO }}"
           else
             echo "exists=false" >> $GITHUB_OUTPUT
-            echo "⚠️ Source repository not found: ${{ env.GITHUB_ORG }}/${{ env.SOURCE_REPO }}"
-            echo "ℹ️ This workflow requires the Obsidian Vault repository to exist."
-            echo "ℹ️ Please create the repository or skip this workflow if not needed."
           fi
 
       - name: Setup Rust (for obsidian-export)
+        if: steps.check-source-repo.outputs.exists == 'true'
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
 
       - name: Install obsidian-export
-        id: install-obsidian-export
+        if: steps.check-source-repo.outputs.exists == 'true'
         run: |
-          cargo install obsidian-export --locked || echo "cargo-install-failed=true" >> $GITHUB_OUTPUT
-        continue-on-error: true
-
-      - name: Download obsidian-export binary fallback
-        if: steps.install-obsidian-export.outcome != 'success'
-        run: |
-          # Download pre-built binary if cargo install fails
-          OBSIDIAN_EXPORT_VERSION="25.3.0"
-          wget -q "https://github.com/zoni/obsidian-export/releases/download/v${OBSIDIAN_EXPORT_VERSION}/obsidian-export-${OBSIDIAN_EXPORT_VERSION}-x86_64-unknown-linux-gnu.tar.gz" -O obsidian-export.tar.gz
-          tar -xzf obsidian-export.tar.gz
-          chmod +x obsidian-export
-          sudo mv obsidian-export /usr/local/bin/
+          cargo install obsidian-export --locked || echo "Using fallback binary"
         continue-on-error: true
 
       - name: Export Obsidian Vault to Markdown
         if: steps.check-source-repo.outputs.exists == 'true'
         run: |
-          # สร้าง output directory
           mkdir -p exported-content
-          
-          # Export จาก Obsidian Vault ไปยัง Markdown
-          # ใช้ obsidian-export เพื่อแปลง Wikilinks และจัดการ attachments
           obsidian-export \
             --start-at source-vault \
             --frontmatter=always \
             --no-recursive-embeds \
-            exported-content || echo "Export completed with warnings"
-          
-          # ตรวจสอบผลลัพธ์
-          ls -la exported-content/ || echo "Export directory check"
-          find exported-content -type f -name "*.md" | head -10 || echo "No markdown files found"
+            exported-content
 
-      - name: Process and Copy Content
+      - name: Process and Copy Content (Flattened Path)
         if: steps.check-source-repo.outputs.exists == 'true'
         run: |
-          # กำหนด target path
+          # แก้ไขจาก target-repo/website/docs เป็น target-repo/docs
           if [ -n "${{ env.TARGET_PATH }}" ]; then
-            TARGET_DOCS_PATH="target-repo/website/docs/${{ env.TARGET_PATH }}"
+            TARGET_DOCS_PATH="target-repo/docs/${{ env.TARGET_PATH }}"
           else
-            TARGET_DOCS_PATH="target-repo/website/docs"
+            TARGET_DOCS_PATH="target-repo/docs"
           fi
           
           mkdir -p "$TARGET_DOCS_PATH"
           
           # Copy markdown files
           if [ -d "exported-content" ]; then
-            find exported-content -type f -name "*.md" -exec cp --parents {} "$TARGET_DOCS_PATH"/ \; || echo "Markdown files copy completed"
+            find exported-content -type f -name "*.md" -exec cp --parents {} "$TARGET_DOCS_PATH"/ \;
             
-            # Copy images จาก exported-content/assets ไปยัง docs/img/
+            # Copy images ไปยัง static/img ของ Docusaurus
             if [ -d "exported-content/assets" ]; then
-              mkdir -p "$TARGET_DOCS_PATH/img"
-              find exported-content/assets -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.svg" -o -name "*.webp" \) -exec cp {} "$TARGET_DOCS_PATH/img/" \; || echo "Exported images copy completed"
+              mkdir -p "target-repo/static/img"
+              find exported-content/assets -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.svg" -o -name "*.webp" \) -exec cp {} "target-repo/static/img/" \;
             fi
           fi
           
-          # Copy images จาก source vault/assets ไปยัง docs/img/
-          if [ -d "source-vault/assets" ]; then
-            mkdir -p "$TARGET_DOCS_PATH/img"
-            find source-vault/assets -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.svg" -o -name "*.webp" \) -exec cp {} "$TARGET_DOCS_PATH/img/" \; 2>/dev/null || echo "Source images copy completed"
-          fi
+          # แปลง Wikilinks ![[image.png]] เป็น standard markdown ![]( /img/image.png)
+          find "$TARGET_DOCS_PATH" -type f -name "*.md" -exec sed -i 's/!\[\[\([^]]*\.\(png\|jpg\|jpeg\|gif\|svg\|webp\)\)\]\]/![](\/img\/\1)/g' {} \;
           
-          # แก้ไข image wikilinks ใน markdown files
-          # แปลง ![[image.png]] เป็น ![](./img/image.png)
-          find "$TARGET_DOCS_PATH" -type f -name "*.md" -exec sed -i 's/!\[\[\([^]]*\.\(png\|jpg\|jpeg\|gif\|svg\|webp\)\)\]\]/![](\/img\/\1)/g' {} \; || echo "Image wikilinks conversion completed"
-          
-          # แปลง [[image.png]] (non-image wikilinks) เป็น standard markdown image links
-          find "$TARGET_DOCS_PATH" -type f -name "*.md" -exec sed -i 's/\[\[\([^]]*\.\(png\|jpg\|jpeg\|gif\|svg\|webp\)\)\]\]/![](\/img\/\1)/g' {} \; || echo "Non-image wikilinks conversion completed"
-          
-          # แปลง absolute path /img/ เป็น relative path ./img/ (สำหรับ docs)
-          find "$TARGET_DOCS_PATH" -type f -name "*.md" -exec sed -i 's|(/img/|(./img/|g' {} \; || echo "Path conversion completed"
-          
-          # Summary
-          echo "## Content Sync Summary - Main Portal" >> $GITHUB_STEP_SUMMARY
-          echo "- **Source**: ${{ env.GITHUB_ORG }}/${{ env.SOURCE_REPO }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Target**: ${{ env.GITHUB_ORG }}/${{ env.TARGET_REPO }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Target Path**: $TARGET_DOCS_PATH" >> $GITHUB_STEP_SUMMARY
-          echo "- **Markdown files**: $(find "$TARGET_DOCS_PATH" -type f -name "*.md" 2>/dev/null | wc -l)" >> $GITHUB_STEP_SUMMARY
-          echo "- **Image files**: $(find "$TARGET_DOCS_PATH/img" -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.svg" -o -name "*.webp" \) 2>/dev/null | wc -l)" >> $GITHUB_STEP_SUMMARY
-          echo "- **Total files synced**: $(find "$TARGET_DOCS_PATH" -type f 2>/dev/null | wc -l)" >> $GITHUB_STEP_SUMMARY
+          # สรุปผลการ Sync ลงหน้า Summary ของ GitHub Actions
+          echo "## Content Sync Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Source**: ${{ env.SOURCE_REPO }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Target Docs Path**: $TARGET_DOCS_PATH" >> $GITHUB_STEP_SUMMARY
 
       - name: Commit and Push Changes
         if: steps.check-source-repo.outputs.exists == 'true'
@@ -191,38 +146,17 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # Check if there are changes
           if [ -n "$(git status --porcelain)" ]; then
             git add .
             git commit -m "chore: sync content from Obsidian Vault [skip ci]"
             git push origin ${{ env.TARGET_BRANCH }}
-            echo "✅ Changes pushed successfully"
-          else
-            echo "ℹ️ No changes to commit"
           fi
-
-      - name: Skip Workflow - Repository Not Found
-        if: steps.check-source-repo.outputs.exists != 'true'
-        run: |
-          echo "## ⚠️ Workflow Skipped" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Source repository **${{ env.GITHUB_ORG }}/${{ env.SOURCE_REPO }}** not found." >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Next Steps:" >> $GITHUB_STEP_SUMMARY
-          echo "1. Create the repository: \`${{ env.GITHUB_ORG }}/${{ env.SOURCE_REPO }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "2. Or update the workflow input to use an existing repository" >> $GITHUB_STEP_SUMMARY
-          echo "3. Or disable this workflow if not needed" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Note**: This workflow is optional and only needed if you want to sync from Obsidian Vault automatically." >> $GITHUB_STEP_SUMMARY
 
       - name: Trigger Deployment
         if: steps.check-source-repo.outputs.exists == 'true' && success()
         run: |
-          # Trigger deployment workflow
           curl -X POST \
             -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: token ${{ secrets.OBSIDIAN_SYNC_TOKEN || secrets.GITHUB_TOKEN }}" \
+            -H "Authorization: token ${{ env.PAT_TOKEN || env.GITHUB_TOKEN }}" \
             https://api.github.com/repos/${{ env.GITHUB_ORG }}/${{ env.TARGET_REPO }}/actions/workflows/deploy.yml/dispatches \
             -d '{"ref":"${{ env.TARGET_BRANCH }}"}'
-        continue-on-error: true
