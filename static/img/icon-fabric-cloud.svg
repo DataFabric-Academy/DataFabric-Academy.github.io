@@ -1,0 +1,28 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="100" cy="100" r="90" fill="url(#gradient2)" opacity="0.1"/>
+  
+  <!-- Cloud Shape -->
+  <path d="M70 120C60 120 50 110 50 100C50 90 60 80 70 80C72 70 80 60 90 60C100 60 108 68 110 78C118 80 125 88 125 98C125 108 117 116 107 118" 
+        stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  
+  <!-- Database Icon -->
+  <ellipse cx="100" cy="70" rx="35" ry="8" stroke="currentColor" stroke-width="4" fill="none"/>
+  <path d="M65 70V90C65 95 75 100 100 100C125 100 135 95 135 90V70" stroke="currentColor" stroke-width="4" fill="none"/>
+  <ellipse cx="100" cy="90" rx="35" ry="8" stroke="currentColor" stroke-width="4" fill="none"/>
+  <line x1="100" y1="62" x2="100" y2="98" stroke="currentColor" stroke-width="3" stroke-dasharray="4 4"/>
+  
+  <!-- Data Flow Lines -->
+  <path d="M50 130L80 150L130 150L150 130" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.6"/>
+  <circle cx="80" cy="150" r="4" fill="currentColor"/>
+  <circle cx="130" cy="150" r="4" fill="currentColor"/>
+  
+  <!-- Gradient Definition -->
+  <defs>
+    <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0078d4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2899f5;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+</svg>
+
