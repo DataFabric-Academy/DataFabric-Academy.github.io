@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkdatafabric_academy=globalThis.webpackChunkdatafabric_academy||[]).push([[6888],{5374(a){a.exports=JSON.parse('{"name":"docusaurus-plugin-content-docs","id":"course-n8n"}')}}]);

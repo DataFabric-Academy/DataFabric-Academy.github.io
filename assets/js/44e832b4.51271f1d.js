@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkdatafabric_academy=globalThis.webpackChunkdatafabric_academy||[]).push([[7053],{6017(a){a.exports=JSON.parse('{"name":"docusaurus-plugin-content-docs","id":"course-ms-sql"}')}}]);
