@@ -1,24 +1,50 @@
 {
-  "name": "@datafabric-academy/monorepo",
+  "name": "datafabric-academy",
   "version": "1.0.0",
   "private": true,
-  "description": "DataFabric Academy - Monorepo for Docusaurus Multi-Site",
-  "workspaces": [
-    "sites/*"
-  ],
+  "description": "DataFabric Academy - Docusaurus Multi-Instance Site",
   "scripts": {
+    "docusaurus": "docusaurus",
+    "start": "docusaurus start",
+    "build": "docusaurus build",
+    "swizzle": "docusaurus swizzle",
+    "deploy": "docusaurus deploy",
+    "clear": "docusaurus clear",
+    "serve": "docusaurus serve",
+    "write-translations": "docusaurus write-translations",
+    "write-heading-ids": "docusaurus write-heading-ids",
+    "typecheck": "tsc",
     "sync": "node scripts/sync-vault.js",
-    "sync:watch": "node scripts/sync-vault.js --watch",
-    "build": "pnpm -r --filter './sites/*' run build",
-    "build:main": "pnpm --filter './sites/main-portal' run build",
-    "dev": "pnpm --filter './sites/main-portal' run start",
-    "dev:all": "pnpm -r --filter './sites/*' run start",
-    "install:all": "pnpm install",
-    "clean": "pnpm -r --filter './sites/*' run clear"
+    "sync:watch": "node scripts/sync-vault.js --watch"
+  },
+  "dependencies": {
+    "@docusaurus/core": "3.9.2",
+    "@docusaurus/preset-classic": "3.9.2",
+    "@mdx-js/react": "^3.0.0",
+    "clsx": "^2.0.0",
+    "prism-react-renderer": "^2.3.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@docusaurus/module-type-aliases": "3.9.2",
+    "@docusaurus/tsconfig": "3.9.2",
+    "@docusaurus/types": "3.9.2",
+    "typescript": "~5.6.2",
     "fs-extra": "^11.2.0",
     "chokidar": "^3.5.3"
+  },
+  "browserslist": {
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 3 chrome version",
+      "last 3 firefox version",
+      "last 5 safari version"
+    ]
   },
   "engines": {
     "node": ">=18.0.0",

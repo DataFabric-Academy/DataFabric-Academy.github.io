@@ -4,37 +4,37 @@ const chokidar = require('chokidar'); // สำหรับ watch mode
 
 // Configuration
 const VAULT_ROOT = process.env.OBSIDIAN_VAULT || 'D:\\Obsidian\\Knowledge-Fabric-Vault';
-const MONOREPO_ROOT = path.resolve(__dirname, '..');
+const REPO_ROOT = path.resolve(__dirname, '..');
 
-// Sync configurations สำหรับแต่ละ site
+// Sync configurations สำหรับแต่ละ docs instance (Multi-instance structure)
 const syncConfigs = [
   {
     name: 'main-portal',
     source: path.join(VAULT_ROOT, '90_Academy', 'main-portal'),
-    dest: path.join(MONOREPO_ROOT, 'sites', 'main-portal', 'docs'),
+    dest: path.join(REPO_ROOT, 'docs'),
     assetsSource: path.join(VAULT_ROOT, '90_Academy', '_assets'),
-    assetsDest: path.join(MONOREPO_ROOT, 'sites', 'main-portal', 'static', 'assets'),
+    assetsDest: path.join(REPO_ROOT, 'static', 'assets'),
   },
   {
     name: 'course-n8n',
     source: path.join(VAULT_ROOT, '90_Academy', 'course-n8n'),
-    dest: path.join(MONOREPO_ROOT, 'sites', 'course-n8n', 'docs'),
+    dest: path.join(REPO_ROOT, 'docs-n8n'),
     assetsSource: path.join(VAULT_ROOT, '90_Academy', '_assets'),
-    assetsDest: path.join(MONOREPO_ROOT, 'sites', 'course-n8n', 'static', 'assets'),
+    assetsDest: path.join(REPO_ROOT, 'static', 'assets'),
   },
   {
     name: 'course-power-bi',
     source: path.join(VAULT_ROOT, '90_Academy', 'course-power-bi'),
-    dest: path.join(MONOREPO_ROOT, 'sites', 'course-power-bi', 'docs'),
+    dest: path.join(REPO_ROOT, 'docs-power-bi'),
     assetsSource: path.join(VAULT_ROOT, '90_Academy', '_assets'),
-    assetsDest: path.join(MONOREPO_ROOT, 'sites', 'course-power-bi', 'static', 'assets'),
+    assetsDest: path.join(REPO_ROOT, 'static', 'assets'),
   },
   {
     name: 'course-ms-sql',
     source: path.join(VAULT_ROOT, '90_Academy', 'course-ms-sql'),
-    dest: path.join(MONOREPO_ROOT, 'sites', 'course-ms-sql', 'docs'),
+    dest: path.join(REPO_ROOT, 'docs-ms-sql'),
     assetsSource: path.join(VAULT_ROOT, '90_Academy', '_assets'),
-    assetsDest: path.join(MONOREPO_ROOT, 'sites', 'course-ms-sql', 'static', 'assets'),
+    assetsDest: path.join(REPO_ROOT, 'static', 'assets'),
   },
 ];
 
@@ -110,15 +110,15 @@ async function syncSite(config) {
  * Sync all sites
  */
 async function syncAll() {
-  console.log('🚀 Starting sync from Obsidian Vault to Docusaurus sites...\n');
+  console.log('🚀 Starting sync from Obsidian Vault to Docusaurus site...\n');
   console.log(`Vault: ${VAULT_ROOT}`);
-  console.log(`Monorepo: ${MONOREPO_ROOT}\n`);
+  console.log(`Repo: ${REPO_ROOT}\n`);
 
   for (const config of syncConfigs) {
     await syncSite(config);
   }
 
-  console.log('✨ All sites synced successfully!');
+  console.log('✨ All content synced successfully!');
 }
 
 /**
