@@ -3,13 +3,6 @@ name: Build and Deploy Sites
 on:
   push:
     branches: [ main, master ]
-    paths:
-      - 'docs*/**'
-      - 'src/**'
-      - 'static/**'
-      - 'docusaurus.config.ts'
-      - 'scripts/**'
-      - 'package.json'
   workflow_dispatch:
 
 jobs:
