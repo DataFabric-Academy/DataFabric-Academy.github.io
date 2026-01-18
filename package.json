@@ -1,0 +1,27 @@
+{
+  "name": "@datafabric-academy/monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DataFabric Academy - Monorepo for Docusaurus Multi-Site",
+  "workspaces": [
+    "sites/*"
+  ],
+  "scripts": {
+    "sync": "node scripts/sync-vault.js",
+    "sync:watch": "node scripts/sync-vault.js --watch",
+    "build": "pnpm -r --filter './sites/*' run build",
+    "build:main": "pnpm --filter './sites/main-portal' run build",
+    "dev": "pnpm --filter './sites/main-portal' run start",
+    "dev:all": "pnpm -r --filter './sites/*' run start",
+    "install:all": "pnpm install",
+    "clean": "pnpm -r --filter './sites/*' run clear"
+  },
+  "devDependencies": {
+    "fs-extra": "^11.2.0",
+    "chokidar": "^3.5.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}
