@@ -44,7 +44,15 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           routeBasePath: '/',
         },
-        blog: false,
+        blog: {
+          showReadingTime: true,
+          readingTime: ({content, frontMatter, defaultReadingTime}) =>
+            defaultReadingTime({content, options: {wordsPerMinute: 300}}),
+          feedOptions: {
+            type: 'all',
+            copyright: `Copyright © ${new Date().getFullYear()} DataFabric Academy.`,
+          },
+        },
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -104,6 +112,13 @@ const config: Config = {
           position: 'left',
           label: 'Docs',
         },
+        {
+          type: 'doc',
+          docId: 'intro',
+          position: 'left',
+          label: 'Home',
+        },
+        {to: '/blog', label: 'Blog', position: 'right'},
         {
           type: 'doc',
           docId: 'intro',
