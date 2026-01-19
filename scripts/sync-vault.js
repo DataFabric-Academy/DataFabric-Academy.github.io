@@ -1,156 +1,151 @@
 const fs = require('fs-extra');
 const path = require('path');
-const chokidar = require('chokidar'); // สำหรับ watch mode
+const chokidar = require('chokidar');
 
 // Configuration
 const VAULT_ROOT = process.env.OBSIDIAN_VAULT || 'D:\\Obsidian\\Knowledge-Fabric-Vault';
 const REPO_ROOT = path.resolve(__dirname, '..');
+const ACADEMY_PATH = path.join(VAULT_ROOT, '90_Academy');
+const ASSETS_SOURCE = path.join(ACADEMY_PATH, '_assets');
+const ASSETS_DEST = path.join(REPO_ROOT, 'static', 'assets');
 
-// Sync configurations สำหรับแต่ละ docs instance (Multi-instance structure)
-const syncConfigs = [
-  {
-    name: 'main-portal',
-    source: path.join(VAULT_ROOT, '90_Academy', 'main-portal'),
-    dest: path.join(REPO_ROOT, 'docs'),
-    assetsSource: path.join(VAULT_ROOT, '90_Academy', '_assets'),
-    assetsDest: path.join(REPO_ROOT, 'static', 'assets'),
-  },
-  {
-    name: 'course-n8n',
-    source: path.join(VAULT_ROOT, '90_Academy', 'course-n8n'),
-    dest: path.join(REPO_ROOT, 'docs-n8n'),
-    assetsSource: path.join(VAULT_ROOT, '90_Academy', '_assets'),
-    assetsDest: path.join(REPO_ROOT, 'static', 'assets'),
-  },
-  {
-    name: 'course-power-bi',
-    source: path.join(VAULT_ROOT, '90_Academy', 'course-power-bi'),
-    dest: path.join(REPO_ROOT, 'docs-power-bi'),
-    assetsSource: path.join(VAULT_ROOT, '90_Academy', '_assets'),
-    assetsDest: path.join(REPO_ROOT, 'static', 'assets'),
-  },
-  {
-    name: 'course-ms-sql',
-    source: path.join(VAULT_ROOT, '90_Academy', 'course-ms-sql'),
-    dest: path.join(REPO_ROOT, 'docs-ms-sql'),
-    assetsSource: path.join(VAULT_ROOT, '90_Academy', '_assets'),
-    assetsDest: path.join(REPO_ROOT, 'static', 'assets'),
-  },
-];
+// Course configurations
+const COURSES = ['main-portal', 'course-n8n', 'course-power-bi', 'course-ms-sql'];
+const DOCS_MAP = {
+  'main-portal': 'docs',
+  'course-n8n': 'docs-n8n',
+  'course-power-bi': 'docs-power-bi',
+  'course-ms-sql': 'docs-ms-sql',
+};
+
+// Generate sync configurations
+const syncConfigs = COURSES.map((name) => ({
+  name,
+  source: path.join(ACADEMY_PATH, name),
+  dest: path.join(REPO_ROOT, DOCS_MAP[name]),
+  assetsSource: ASSETS_SOURCE,
+  assetsDest: ASSETS_DEST,
+}));
 
 /**
- * Copy files from source to destination
+ * Copy files from source to destination with filtering.
  * @param {string} source - Source directory
  * @param {string} dest - Destination directory
- * @param {object} options - Copy options
+ * @returns {Promise<void>}
  */
-async function copyFiles(source, dest, options = {}) {
-  if (!await fs.pathExists(source)) {
+async function copyFiles(source, dest) {
+  if (!(await fs.pathExists(source))) {
     console.warn(`⚠️  Source path does not exist: ${source}`);
     return;
   }
 
-  await fs.ensureDir(dest);
+  try {
+    await fs.ensureDir(dest);
 
-  await fs.copy(source, dest, {
-    overwrite: true,
-    filter: (src) => {
-      // Skip node_modules, .git, and other system files
-      const relativePath = path.relative(source, src);
-      if (relativePath.includes('node_modules') || 
-          relativePath.includes('.git') ||
-          relativePath.includes('.obsidian')) {
-        return false;
-      }
-      // Copy .md files and assets
-      return true;
-    },
-    ...options,
-  });
+    await fs.copy(source, dest, {
+      overwrite: true,
+      filter: (src) => {
+        const relativePath = path.relative(source, src);
+        const ignoredPatterns = ['node_modules', '.git', '.obsidian', '.DS_Store', 'Thumbs.db'];
+        return !ignoredPatterns.some((pattern) => relativePath.includes(pattern));
+      },
+    });
+  } catch (error) {
+    console.error(`❌ Error copying ${source} to ${dest}:`, error.message);
+    throw error;
+  }
 }
 
 /**
- * Convert Obsidian Wiki Links to Markdown links (optional)
- * @param {string} content - File content
- * @returns {string} - Converted content
- */
-function convertWikiLinks(content) {
-  // Convert [[link]] to [link](link.md)
-  // This is optional - you can skip if using standard markdown links
-  return content.replace(/\[\[([^\]]+)\]\]/g, (match, link) => {
-    const cleanLink = link.split('|')[0]; // Handle [[link|display text]]
-    return `[${cleanLink}](${cleanLink.replace(/\s+/g, '-').toLowerCase()}.md)`;
-  });
-}
-
-/**
- * Sync content and assets for a single site
+ * Sync content and assets for a single site.
+ * @param {object} config - Sync configuration
+ * @returns {Promise<void>}
  */
 async function syncSite(config) {
   console.log(`\n📦 Syncing ${config.name}...`);
 
-  // Sync content files
-  if (await fs.pathExists(config.source)) {
-    await copyFiles(config.source, config.dest);
-    console.log(`  ✓ Content: ${config.source} → ${config.dest}`);
-  } else {
-    console.warn(`  ⚠️  Content source not found: ${config.source}`);
-  }
+  try {
+    // Sync content files
+    if (await fs.pathExists(config.source)) {
+      await copyFiles(config.source, config.dest);
+      console.log(`  ✓ Content: ${path.basename(config.source)} → ${path.basename(config.dest)}`);
+    } else {
+      console.warn(`  ⚠️  Content source not found: ${config.source}`);
+    }
 
-  // Sync assets
-  if (await fs.pathExists(config.assetsSource)) {
-    await copyFiles(config.assetsSource, config.assetsDest);
-    console.log(`  ✓ Assets: ${config.assetsSource} → ${config.assetsDest}`);
-  }
+    // Sync assets (only once, shared across all courses)
+    if (config.name === 'main-portal' && (await fs.pathExists(config.assetsSource))) {
+      await copyFiles(config.assetsSource, config.assetsDest);
+      console.log(`  ✓ Assets synced`);
+    }
 
-  console.log(`  ✅ ${config.name} sync complete\n`);
+    console.log(`  ✅ ${config.name} sync complete`);
+  } catch (error) {
+    console.error(`  ❌ Failed to sync ${config.name}:`, error.message);
+    throw error;
+  }
 }
 
 /**
- * Sync all sites
+ * Sync all sites.
+ * @returns {Promise<void>}
  */
 async function syncAll() {
   console.log('🚀 Starting sync from Obsidian Vault to Docusaurus site...\n');
   console.log(`Vault: ${VAULT_ROOT}`);
   console.log(`Repo: ${REPO_ROOT}\n`);
 
-  for (const config of syncConfigs) {
-    await syncSite(config);
+  try {
+    for (const config of syncConfigs) {
+      await syncSite(config);
+    }
+    console.log('\n✨ All content synced successfully!');
+  } catch (error) {
+    console.error('\n❌ Sync failed:', error.message);
+    process.exit(1);
   }
-
-  console.log('✨ All content synced successfully!');
 }
 
 /**
- * Watch mode - auto-sync on file changes
+ * Watch mode - auto-sync on file changes.
+ * @returns {void}
  */
 function watchMode() {
   console.log('👀 Watch mode enabled - watching for file changes...\n');
 
-  const watchPaths = syncConfigs.map(config => [
-    config.source,
-    config.assetsSource,
-  ]).flat().filter(p => fs.pathExistsSync(p));
+  const watchPaths = [
+    ...syncConfigs.map((config) => config.source),
+    ASSETS_SOURCE,
+  ].filter((p) => fs.pathExistsSync(p));
 
   const watcher = chokidar.watch(watchPaths, {
-    ignored: /(^|[\/\\])\../, // Ignore dotfiles
+    ignored: /(^|[\/\\])\../,
     persistent: true,
+    ignoreInitial: true,
   });
 
   watcher.on('change', async (filePath) => {
-    console.log(`\n📝 File changed: ${filePath}`);
-    
-    // Find which config this file belongs to
-    const config = syncConfigs.find(c => 
-      filePath.startsWith(c.source) || filePath.startsWith(c.assetsSource)
+    console.log(`\n📝 File changed: ${path.basename(filePath)}`);
+
+    const config = syncConfigs.find(
+      (c) => filePath.startsWith(c.source) || filePath.startsWith(ASSETS_SOURCE)
     );
 
     if (config) {
-      await syncSite(config);
+      try {
+        await syncSite(config);
+      } catch (error) {
+        console.error(`  ❌ Sync failed for ${config.name}:`, error.message);
+      }
     }
   });
 
+  watcher.on('error', (error) => {
+    console.error('❌ Watcher error:', error.message);
+  });
+
   console.log(`Watching ${watchPaths.length} paths...\n`);
+  console.log('Press Ctrl+C to stop watching.\n');
 }
 
 // Main execution
@@ -158,7 +153,12 @@ const args = process.argv.slice(2);
 const isWatchMode = args.includes('--watch');
 
 if (isWatchMode) {
-  syncAll().then(() => watchMode());
+  syncAll()
+    .then(() => watchMode())
+    .catch((error) => {
+      console.error('❌ Failed to start watch mode:', error.message);
+      process.exit(1);
+    });
 } else {
-  syncAll().catch(console.error);
+  syncAll();
 }

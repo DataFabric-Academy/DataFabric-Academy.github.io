@@ -1,41 +1,95 @@
-# Website
+# DataFabric Academy
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+Modern documentation site built with Docusaurus, featuring multi-instance docs for multiple courses.
 
-## Installation
+## 🚀 Quick Start
 
-```bash
-yarn
-```
+### Prerequisites
 
-## Local Development
+- Node.js >= 18.0.0
+- pnpm >= 8.0.0
 
-```bash
-yarn start
-```
-
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
-
-## Build
+### Installation
 
 ```bash
-yarn build
+pnpm install
 ```
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
-
-## Deployment
-
-Using SSH:
+### Local Development
 
 ```bash
-USE_SSH=true yarn deploy
+# Start dev server
+pnpm run start
+
+# Build for production
+pnpm run build
+
+# Serve build locally
+pnpm run serve
 ```
 
-Not using SSH:
+## 📚 Content Management
+
+### Sync from Obsidian Vault
 
 ```bash
-GIT_USER=<Your GitHub username> yarn deploy
+# One-time sync
+pnpm run sync
+
+# Watch mode (auto-sync on changes)
+pnpm run sync:watch
 ```
 
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+**Obsidian Vault Location**: `D:\Obsidian\Knowledge-Fabric-Vault\90_Academy\`
+
+## 🏗️ Architecture
+
+- **Single Docusaurus Site** with **Multi-Instance Docs**
+- **Obsidian Vault** → Sync Script → **Docusaurus**
+- **GitHub Actions** → Build & Deploy → **GitHub Pages**
+
+### Course Structure
+
+- **Main Portal**: `docs/` → `/`
+- **Course n8n**: `docs-n8n/` → `/course-n8n`
+- **Course Power BI**: `docs-power-bi/` → `/course-power-bi`
+- **Course MS SQL**: `docs-ms-sql/` → `/course-ms-sql`
+
+## 🚀 Deployment
+
+See [Deployment Guide](docs/deployment.md) for detailed instructions.
+
+### Quick Deploy
+
+```bash
+# Sync content
+pnpm run sync
+
+# Commit and push
+git add .
+git commit -m "docs: update content"
+git push origin master
+```
+
+GitHub Actions will automatically build and deploy to GitHub Pages.
+
+## 📖 Documentation
+
+- [Deployment Guide](docs/deployment.md) - Setup, troubleshooting, and deployment
+- [Project Summary](PROJECT_SUMMARY.md) - Complete project overview
+
+## 🔗 URLs
+
+- **Production**: https://DataFabric-Academy.github.io
+- **Custom Domain**: https://datafabric.academy
+
+## 🛠️ Tech Stack
+
+- [Docusaurus](https://docusaurus.io/) - Static site generator
+- [pnpm](https://pnpm.io/) - Package manager
+- [GitHub Actions](https://github.com/features/actions) - CI/CD
+- [GitHub Pages](https://pages.github.com/) - Hosting
+
+## 📝 License
+
+Copyright © 2026 DataFabric Academy.

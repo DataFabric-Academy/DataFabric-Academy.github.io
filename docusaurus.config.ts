@@ -2,31 +2,28 @@ import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
-// This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
+// Course configurations for multi-instance docs
+const COURSES = [
+  {id: 'course-n8n', path: 'docs-n8n', routeBasePath: 'course-n8n', sidebarPath: './sidebars-n8n.ts', label: 'Course: n8n'},
+  {id: 'course-power-bi', path: 'docs-power-bi', routeBasePath: 'course-power-bi', sidebarPath: './sidebars-power-bi.ts', label: 'Course: Power BI'},
+  {id: 'course-ms-sql', path: 'docs-ms-sql', routeBasePath: 'course-ms-sql', sidebarPath: './sidebars-ms-sql.ts', label: 'Course: MS SQL'},
+] as const;
 
 const config: Config = {
   title: 'DataFabric Academy',
   tagline: 'Learn Data Engineering, AI, and Microsoft Fabric',
   favicon: 'img/favicon.ico',
 
-  // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
-    v4: true, // Improve compatibility with the upcoming Docusaurus v4
+    v4: true,
   },
 
-  // Set the production url of your site here
   url: 'https://DataFabric-Academy.github.io',
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
-
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'DataFabric-Academy', // Usually your GitHub org/user name.
-  projectName: 'DataFabric-Academy.github.io', // Usually your repo name.
+  organizationName: 'DataFabric-Academy',
+  projectName: 'DataFabric-Academy.github.io',
 
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
   markdown: {
     hooks: {
       onBrokenMarkdownLinks: 'warn',
@@ -66,36 +63,15 @@ const config: Config = {
   ],
 
   plugins: [
-    // Course N8N - Multi-instance
-    [
+    ...COURSES.map((course) => [
       '@docusaurus/plugin-content-docs',
       {
-        id: 'course-n8n',
-        path: 'docs-n8n',
-        routeBasePath: 'course-n8n',
-        sidebarPath: './sidebars-n8n.ts',
+        id: course.id,
+        path: course.path,
+        routeBasePath: course.routeBasePath,
+        sidebarPath: course.sidebarPath,
       },
-    ],
-    // Course Power BI - Multi-instance
-    [
-      '@docusaurus/plugin-content-docs',
-      {
-        id: 'course-power-bi',
-        path: 'docs-power-bi',
-        routeBasePath: 'course-power-bi',
-        sidebarPath: './sidebars-power-bi.ts',
-      },
-    ],
-    // Course MS SQL - Multi-instance
-    [
-      '@docusaurus/plugin-content-docs',
-      {
-        id: 'course-ms-sql',
-        path: 'docs-ms-sql',
-        routeBasePath: 'course-ms-sql',
-        sidebarPath: './sidebars-ms-sql.ts',
-      },
-    ],
+    ]),
   ],
 
   themeConfig: {
@@ -124,27 +100,13 @@ const config: Config = {
           label: 'Home',
         },
         {to: '/blog', label: 'Blog', position: 'right'},
-        {
-          type: 'doc',
+        ...COURSES.map((course) => ({
+          type: 'doc' as const,
           docId: 'intro',
-          docsPluginId: 'course-n8n',
-          label: 'Course: n8n',
-          position: 'right',
-        },
-        {
-          type: 'doc',
-          docId: 'intro',
-          docsPluginId: 'course-power-bi',
-          label: 'Course: Power BI',
-          position: 'right',
-        },
-        {
-          type: 'doc',
-          docId: 'intro',
-          docsPluginId: 'course-ms-sql',
-          label: 'Course: MS SQL',
-          position: 'right',
-        },
+          docsPluginId: course.id,
+          label: course.label,
+          position: 'right' as const,
+        })),
       ],
     },
     footer: {
