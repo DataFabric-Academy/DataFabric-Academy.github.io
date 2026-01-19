@@ -619,7 +619,7 @@ DataFabric-Academy.github.io/
 - [Obsidian Sync Test](obsidian-sync-test.md) - Sync testing guide
 - [Obsidian Attachments Setup](obsidian-attachments-setup.md) - Attachments guide
 - [Troubleshooting](troubleshooting.md) - Common issues
-- [Project Summary](../PROJECT_SUMMARY.md) - Project overview
+- [Project Summary](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io/blob/master/PROJECT_SUMMARY.md) - Project overview
 
 ---
 
