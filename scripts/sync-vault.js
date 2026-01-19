@@ -33,7 +33,7 @@ const syncConfigs = COURSES.map((name) => ({
  * @param {string} dest - Destination directory
  * @returns {Promise<void>}
  */
-async function copyFiles(source, dest) {
+async function copyFiles(source, dest, options = {}) {
   if (!(await fs.pathExists(source))) {
     console.warn(`⚠️  Source path does not exist: ${source}`);
     return;
@@ -47,6 +47,12 @@ async function copyFiles(source, dest) {
       filter: (src) => {
         const relativePath = path.relative(source, src);
         const ignoredPatterns = ['node_modules', '.git', '.obsidian', '.DS_Store', 'Thumbs.db'];
+        
+        // Exclude attachments folder if option is set (will be synced separately)
+        if (options.excludeAttachments && relativePath.includes('attachments')) {
+          return false;
+        }
+        
         return !ignoredPatterns.some((pattern) => relativePath.includes(pattern));
       },
     });
@@ -54,6 +60,24 @@ async function copyFiles(source, dest) {
     console.error(`❌ Error copying ${source} to ${dest}:`, error.message);
     throw error;
   }
+}
+
+/**
+ * Sync attachments from a source folder to assets destination.
+ * @param {string} attachmentsSource - Source attachments folder
+ * @param {string} assetsDest - Destination assets folder
+ * @param {string} courseName - Course name for organization
+ * @returns {Promise<void>}
+ */
+async function syncAttachments(attachmentsSource, assetsDest, courseName) {
+  if (!(await fs.pathExists(attachmentsSource))) {
+    return; // No attachments folder, skip
+  }
+
+  const courseAssetsDest = path.join(assetsDest, courseName);
+  await fs.ensureDir(courseAssetsDest);
+  await copyFiles(attachmentsSource, courseAssetsDest);
+  console.log(`  ✓ Attachments: ${path.basename(attachmentsSource)} → assets/${courseName}`);
 }
 
 /**
@@ -65,18 +89,26 @@ async function syncSite(config) {
   console.log(`\n📦 Syncing ${config.name}...`);
 
   try {
-    // Sync content files
+    // Sync content files (excluding attachments folder)
     if (await fs.pathExists(config.source)) {
-      await copyFiles(config.source, config.dest);
+      await copyFiles(config.source, config.dest, {
+        excludeAttachments: true,
+      });
       console.log(`  ✓ Content: ${path.basename(config.source)} → ${path.basename(config.dest)}`);
     } else {
       console.warn(`  ⚠️  Content source not found: ${config.source}`);
     }
 
-    // Sync assets (only once, shared across all courses)
+    // Sync attachments folder (if exists) to static/assets/{course-name}
+    const attachmentsSource = path.join(config.source, 'attachments');
+    if (await fs.pathExists(attachmentsSource)) {
+      await syncAttachments(attachmentsSource, ASSETS_DEST, config.name);
+    }
+
+    // Sync shared assets (only once, shared across all courses)
     if (config.name === 'main-portal' && (await fs.pathExists(config.assetsSource))) {
       await copyFiles(config.assetsSource, config.assetsDest);
-      console.log(`  ✓ Assets synced`);
+      console.log(`  ✓ Shared assets synced`);
     }
 
     console.log(`  ✅ ${config.name} sync complete`);
