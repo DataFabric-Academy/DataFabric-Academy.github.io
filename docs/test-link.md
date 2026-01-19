@@ -1,4 +1,4 @@
-[[intro]]
+[[90_Academy/main-portal/intro]]
 
 $$E=mc^2$$
 
