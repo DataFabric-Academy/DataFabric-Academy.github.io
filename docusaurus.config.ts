@@ -4,14 +4,14 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 // Course configurations for multi-instance docs
 const COURSES = [
-  {id: 'course-n8n', path: 'docs-n8n', routeBasePath: 'course-n8n', sidebarPath: './sidebars-n8n.ts', label: 'Course: n8n'},
-  {id: 'course-power-bi', path: 'docs-power-bi', routeBasePath: 'course-power-bi', sidebarPath: './sidebars-power-bi.ts', label: 'Course: Power BI'},
-  {id: 'course-ms-sql', path: 'docs-ms-sql', routeBasePath: 'course-ms-sql', sidebarPath: './sidebars-ms-sql.ts', label: 'Course: MS SQL'},
+  {id: 'course-n8n', path: 'docs-n8n', routeBasePath: 'course-n8n', sidebarPath: './sidebars-n8n.ts', label: 'คอร์ส: n8n'},
+  {id: 'course-power-bi', path: 'docs-power-bi', routeBasePath: 'course-power-bi', sidebarPath: './sidebars-power-bi.ts', label: 'คอร์ส: Power BI'},
+  {id: 'course-ms-sql', path: 'docs-ms-sql', routeBasePath: 'course-ms-sql', sidebarPath: './sidebars-ms-sql.ts', label: 'คอร์ส: MS SQL'},
 ] as const;
 
 const config: Config = {
   title: 'DataFabric Academy',
-  tagline: 'Learn Data Engineering, AI, and Microsoft Fabric',
+  tagline: 'เรียนรู้ Data Engineering, AI, และ Microsoft Fabric',
   favicon: 'img/favicon.ico',
 
   future: {
@@ -91,15 +91,15 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Docs',
+          label: 'เอกสาร',
         },
         {
           type: 'doc',
           docId: 'intro',
           position: 'left',
-          label: 'Home',
+          label: 'หน้าแรก',
         },
-        {to: '/blog', label: 'Blog', position: 'right'},
+        {to: '/blog', label: 'บล็อก', position: 'right'},
         ...COURSES.map((course) => ({
           type: 'doc' as const,
           docId: 'intro',
@@ -107,6 +107,10 @@ const config: Config = {
           label: course.label,
           position: 'right' as const,
         })),
+        {
+          type: 'localeDropdown',
+          position: 'right',
+        },
       ],
     },
     footer: {
