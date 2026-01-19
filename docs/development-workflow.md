@@ -280,7 +280,7 @@ pnpm run start
 
 - [Obsidian Sync Test Guide](obsidian-sync-test.md) - Detailed sync testing
 - [Deployment Guide](deployment.md) - Production deployment
-- [Project Summary](../PROJECT_SUMMARY.md) - Project overview
+- [Project Summary](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io/blob/master/PROJECT_SUMMARY.md) - Project overview
 
 ---
 

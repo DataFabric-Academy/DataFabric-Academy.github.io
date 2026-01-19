@@ -342,8 +342,8 @@ git diff docs/
 ## 🔗 Related Documentation
 
 - [Deployment Guide](deployment.md) - GitHub Pages deployment
-- [Project Summary](../PROJECT_SUMMARY.md) - Project overview
-- [Sync Script](../scripts/sync-vault.js) - Source code
+- [Project Summary](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io/blob/master/PROJECT_SUMMARY.md) - Project overview
+- [Sync Script](https://github.com/DataFabric-Academy/DataFabric-Academy.github.io/blob/master/scripts/sync-vault.js) - Source code
 
 ---
 
