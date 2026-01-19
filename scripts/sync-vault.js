@@ -28,9 +28,50 @@ const syncConfigs = COURSES.map((name) => ({
 }));
 
 /**
- * Copy files from source to destination with filtering.
+ * Convert Obsidian Wiki Links to Markdown image syntax.
+ * Converts ![[image.jpg]] to ![image.jpg](/assets/{courseName}/image.jpg)
+ * @param {string} content - File content
+ * @param {string} courseName - Course name for asset path
+ * @returns {string} - Converted content
+ */
+function convertWikiLinks(content, courseName) {
+  // Convert ![[image.jpg]] to ![image.jpg](/assets/{courseName}/image.jpg)
+  // Also handles ![[image.jpg|alt text]] format
+  return content.replace(/!\[\[([^\]]+)\]\]/g, (match, link) => {
+    // Handle [[image.jpg|alt text]] format
+    const parts = link.split('|');
+    const imagePath = parts[0].trim();
+    const altText = parts[1] ? parts[1].trim() : imagePath;
+    
+    // Remove file extension for alt text if present
+    const altTextClean = altText.replace(/\.[^.]+$/, '');
+    
+    // Build Docusaurus asset path
+    const assetPath = `/assets/${courseName}/${imagePath}`;
+    
+    return `![${altTextClean}](${assetPath})`;
+  });
+}
+
+/**
+ * Process Markdown file: convert Wiki Links and write to destination.
+ * @param {string} sourceFile - Source file path
+ * @param {string} destFile - Destination file path
+ * @param {string} courseName - Course name for asset path
+ * @returns {Promise<void>}
+ */
+async function processMarkdownFile(sourceFile, destFile, courseName) {
+  const content = await fs.readFile(sourceFile, 'utf8');
+  const convertedContent = convertWikiLinks(content, courseName);
+  await fs.ensureDir(path.dirname(destFile));
+  await fs.writeFile(destFile, convertedContent, 'utf8');
+}
+
+/**
+ * Copy files from source to destination with filtering and Wiki Link conversion.
  * @param {string} source - Source directory
  * @param {string} dest - Destination directory
+ * @param {object} options - Copy options
  * @returns {Promise<void>}
  */
 async function copyFiles(source, dest, options = {}) {
@@ -42,20 +83,53 @@ async function copyFiles(source, dest, options = {}) {
   try {
     await fs.ensureDir(dest);
 
-    await fs.copy(source, dest, {
-      overwrite: true,
-      filter: (src) => {
-        const relativePath = path.relative(source, src);
-        const ignoredPatterns = ['node_modules', '.git', '.obsidian', '.DS_Store', 'Thumbs.db'];
+    // If processing markdown files with Wiki Link conversion
+    if (options.convertWikiLinks && options.courseName) {
+      const files = await fs.readdir(source, { withFileTypes: true });
+      
+      for (const file of files) {
+        const sourcePath = path.join(source, file.name);
+        const destPath = path.join(dest, file.name);
         
-        // Exclude attachments folder if option is set (will be synced separately)
-        if (options.excludeAttachments && relativePath.includes('attachments')) {
-          return false;
+        // Skip attachments folder
+        if (options.excludeAttachments && file.name === 'attachments') {
+          continue;
         }
         
-        return !ignoredPatterns.some((pattern) => relativePath.includes(pattern));
-      },
-    });
+        // Skip ignored patterns
+        const ignoredPatterns = ['.git', '.obsidian', '.DS_Store', 'Thumbs.db'];
+        if (ignoredPatterns.some(pattern => file.name.includes(pattern))) {
+          continue;
+        }
+        
+        if (file.isDirectory()) {
+          // Recursively copy directories
+          await copyFiles(sourcePath, destPath, options);
+        } else if (file.isFile() && /\.md$/i.test(file.name)) {
+          // Process Markdown files: convert Wiki Links
+          await processMarkdownFile(sourcePath, destPath, options.courseName);
+        } else {
+          // Copy other files as-is
+          await fs.copy(sourcePath, destPath);
+        }
+      }
+    } else {
+      // Standard copy without Wiki Link conversion
+      await fs.copy(source, dest, {
+        overwrite: true,
+        filter: (src) => {
+          const relativePath = path.relative(source, src);
+          const ignoredPatterns = ['node_modules', '.git', '.obsidian', '.DS_Store', 'Thumbs.db'];
+          
+          // Exclude attachments folder if option is set (will be synced separately)
+          if (options.excludeAttachments && relativePath.includes('attachments')) {
+            return false;
+          }
+          
+          return !ignoredPatterns.some((pattern) => relativePath.includes(pattern));
+        },
+      });
+    }
   } catch (error) {
     console.error(`❌ Error copying ${source} to ${dest}:`, error.message);
     throw error;
@@ -89,10 +163,12 @@ async function syncSite(config) {
   console.log(`\n📦 Syncing ${config.name}...`);
 
   try {
-    // Sync content files (excluding attachments folder)
+    // Sync content files (excluding attachments folder, with Wiki Link conversion)
     if (await fs.pathExists(config.source)) {
       await copyFiles(config.source, config.dest, {
         excludeAttachments: true,
+        convertWikiLinks: true,
+        courseName: config.name,
       });
       console.log(`  ✓ Content: ${path.basename(config.source)} → ${path.basename(config.dest)}`);
     } else {
