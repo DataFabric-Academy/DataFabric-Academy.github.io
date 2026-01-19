@@ -1,17 +1,10 @@
 ---
 sidebar_position: 2
 ---
-
 # แนะนำวิทยากร
+## อาจารย์ภัคพงศ์ กฤตวัฒน์
 
-<div style={{textAlign: 'center', marginBottom: '2rem'}}>
-
-![อาจารย์ภัคพงศ์ กฤตวัฒน์](./img/Phakkhaphong.png)
-
-**อาจารย์ภัคพงศ์ กฤตวัฒน์**  
-*9Expert Training Instructor*
-
-</div>
+![Phakkhaphong](/assets/main-portal/Phakkhaphong.png)
 
 ## 🏆 Certifications & Qualifications
 
