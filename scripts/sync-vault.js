@@ -97,7 +97,7 @@ async function copyFiles(source, dest, options = {}) {
         }
         
         // Skip ignored patterns
-        const ignoredPatterns = ['.git', '.obsidian', '.DS_Store', 'Thumbs.db'];
+        const ignoredPatterns = ['.git', '.obsidian', '.DS_Store', 'Thumbs.db', '_category_.json'];
         if (ignoredPatterns.some(pattern => file.name.includes(pattern))) {
           continue;
         }
@@ -119,7 +119,7 @@ async function copyFiles(source, dest, options = {}) {
         overwrite: true,
         filter: (src) => {
           const relativePath = path.relative(source, src);
-          const ignoredPatterns = ['node_modules', '.git', '.obsidian', '.DS_Store', 'Thumbs.db'];
+          const ignoredPatterns = ['node_modules', '.git', '.obsidian', '.DS_Store', 'Thumbs.db', '_category_.json'];
           
           // Exclude attachments folder if option is set (will be synced separately)
           if (options.excludeAttachments && relativePath.includes('attachments')) {
